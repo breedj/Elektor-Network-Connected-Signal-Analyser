@@ -2,9 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -20,12 +22,14 @@ namespace Elektor.SignalAnalyzer
 
         const int Timeout = 1000;
         const int Attempts = 4;
+        private static int _port = 4000;
         private static readonly CountdownEvent CountdownEvent = new CountdownEvent(2015);       // Keeps track of running threads
         private static readonly ConcurrentBag<PingResult> PingResults = new ConcurrentBag<PingResult>(); // Holds all pint results
         private static readonly CancellationTokenSource TokenSource = new CancellationTokenSource();
 
         public static IEnumerable<DeviceNetworkAddress> FindIpAddress(string[] macAdresses, string[] ipAddresses, int port)
         {
+            _port = port;
             List<DeviceNetworkAddress> result = new List<DeviceNetworkAddress>();
 
             // Find by mac address on other thread
@@ -38,11 +42,8 @@ namespace Elektor.SignalAnalyzer
                 // Try to connect to static ips
                 foreach (string ip in ipAddresses)
                 {
-                    IPAddress ipAddress = IPAddress.Parse(ip);
-                    TcpClient client = new TcpClient();
-                    IAsyncResult asyncResult = client.BeginConnect(ipAddress, port, null, null);
-                    asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1)); //timeout if no connection there
-                    if (client.Connected)
+                    IPAddress ipAddress = IPAddress.Parse(ip);                    
+                    if (TryConnect(ipAddress, port))
                     {
                         //string mac = GetMacAddress(ipAddress);    // Static has unknown mac now. 
                         result.Add(new DeviceNetworkAddress { IPAddress = ipAddress, MACAddress = string.Empty});
@@ -54,12 +55,13 @@ namespace Elektor.SignalAnalyzer
             // Wait for bith tasks to finish
             taskFind.Wait();
             taskConnectStatic.Wait();
-
+           
             // Merge results with static
             result.AddRange(PingResults
                 .Where(p => macAdresses.Contains(p.MacAddress)) // Filter out mac we are interested in.
-                .Select(p => new DeviceNetworkAddress { IPAddress = p.IpAddress, MACAddress = p.MacAddress })
-                .DistinctBy(p => p.IPAddress));
+                .Select(p => new DeviceNetworkAddress { IPAddress = p.IpAddress, MACAddress = p.MacAddress }));
+           
+            result = result.DistinctBy(p => p.IPAddress.ToString()).ToList();
 
             return result;
         }
@@ -115,6 +117,10 @@ namespace Elektor.SignalAnalyzer
             return ip;
         }
 
+
+        /// <summary>
+        /// Find network analyzers on the local network
+        /// </summary>
         public static void FindNetworkAnalyzers()
         {            
             IPAddress gatewayIpAddress = NetworkGateway();
@@ -151,32 +157,69 @@ namespace Elektor.SignalAnalyzer
                     }
                     catch
                     {
-                        CountdownEvent.Signal(); // Does not fire completed event, so add to signal
+                        if (CountdownEvent.CurrentCount > 0)
+                            CountdownEvent.Signal(); // Does not fire completed event, so add to signal
                     }
                 }).Start();
             }
         }
 
-
+        /// <summary>
+        /// Event handler fired when a ping has been completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void PingCompleted(object sender, PingCompletedEventArgs e)
         {
             IPAddress ip = (IPAddress)e.UserState;
             if (e.Reply != null && e.Reply.Status == IPStatus.Success)
-            {
-                string macaddres = GetMacAddress(ip);
-                PingResult result = new PingResult {IpAddress = ip, MacAddress = macaddres};
-                if (!PingResults.Contains(result))
-                    PingResults.Add(result);
+            {                
+                // Try to connect to the port                
+                if (TryConnect(ip, _port))
+                {                
+                    // Can connect.
+                    string macaddres = GetMacAddress(ip);
+                    PingResult result = new PingResult { IpAddress = ip, MacAddress = macaddres };
+                    if (!PingResults.Contains(result))
+                        PingResults.Add(result);
+                }                
             }
             // Signal the CountdownEvent.
-            CountdownEvent.Signal();
+            if (CountdownEvent.CurrentCount > 0)
+                CountdownEvent.Signal();
         }
 
 
+        /// <summary>
+        /// Extension method
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             HashSet<TKey> seenKeys = new HashSet<TKey>();
             return source.Where(element => seenKeys.Add(keySelector(element)));
+        }
+
+
+        /// <summary>
+        /// Try to connect to a ip and port
+        /// </summary>
+        /// <param name="ip">Ip address</param>
+        /// <param name="port">port to connect to</param>
+        /// <returns>true of able to connect</returns>
+        private static bool TryConnect(IPAddress ipAddress, int port)
+        {
+            TcpClient client = new TcpClient();
+            IAsyncResult asyncResult = client.BeginConnect(ipAddress, port, null, null);
+            asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1)); //timeout if no connection there
+            bool result = client.Connected;
+            if (client.Connected)
+                client.Close();
+            return result;
         }
     }
 

@@ -24,7 +24,7 @@ namespace SignalAnalyzerApplication
 
         private const int Port = 4000;
         private readonly string[] _macAddresses = { "00:08:dc:00:ab:cd", "02:08:dc:00:ab:cd"};   // Find devices by these mac adresses when using DHCP
-        private readonly string[] _staticIpAddresses = { "192.168.1.123", "192.168.0.123" }; // Find devices by these IP addresses when using static IP
+        private readonly string[] _staticIpAddresses = { "192.168.1.123", "192.168.0.123", "192.168.2.123", "192.168.0.122" }; // Find devices by these IP addresses when using static IP
         
         #endregion
 
@@ -106,8 +106,6 @@ namespace SignalAnalyzerApplication
             chkEnableSignalGenerator.Checked = false;
             cmbGeneratorWaveform.SelectedIndex = 0;
             txtGeneratorFreq.Text = "1000";
-            cmbIPAddresses.DisplayMember = "Text";
-            cmbIPAddresses.ValueMember = "Value";
             cmbADCS.SelectedIndex = 4; // 4
             rbADC12Bit.Checked = true;
 
@@ -134,11 +132,11 @@ namespace SignalAnalyzerApplication
             ipAddress = Properties.Settings.Default.IPanalyzer;
             if (!string.IsNullOrEmpty(ipAddress))
             {
-                cmbIPAddresses.Items.Add(new ComboboxItem {Text = ipAddress, Value = ipAddress});
+                cmbIPAddresses.Items.Add(ipAddress);
                 btnConnect.Enabled = true;
             }
             else
-                cmbIPAddresses.Items.Add(new ComboboxItem {Text = "Click 'Find'", Value = string.Empty});
+                cmbIPAddresses.Items.Add("Click 'Find'");
             cmbIPAddresses.SelectedIndex = 0;
         }
 
@@ -592,9 +590,13 @@ namespace SignalAnalyzerApplication
         {
             if (!_connection.IsConnected)
             {
+                ipAddress = cmbIPAddresses.Text;
                 _connection.Connect(ipAddress, Port);
                 if (_connection.IsConnected)
                 {
+                    Properties.Settings.Default.IPanalyzer = ipAddress;
+                    Properties.Settings.Default.Save(); //persist ipaddress that works
+
                     chkEnableSignalGenerator.Enabled = true; // Enable checkbox;
                     _signalGenator.Enabled = false;
                     btnConnect.Text = "Disconnect";
@@ -996,14 +998,16 @@ namespace SignalAnalyzerApplication
             dialog.Close();
             dialog.Dispose();
 
-            cmbIPAddresses.Items.Clear();
+            cmbIPAddresses.Items.Clear();            
             if (devices.Any())
-            {                                
-                cmbIPAddresses.DataSource = new BindingSource(devices.Select(d => new ComboboxItem { Text = d.IPAddress.ToString(), Value = d.IPAddress.ToString() }).ToList(), null);
+            {                                                
+                //cmbIPAddresses.DataSource = new BindingSource(devices.Select(d => new ComboboxItem { Text = d.IPAddress.ToString(), Value = d.IPAddress.ToString() }).ToList(), null);                
+                foreach (string address in devices.Select(d => d.IPAddress.ToString()))                
+                    cmbIPAddresses.Items.Add(address);
+                
                 if (devices.Count > 1)
                 {
-                    cmbIPAddresses.Items.Insert(0,
-                        new ComboboxItem {Text = "Select an IP address", Value = string.Empty});
+                    cmbIPAddresses.Text = "Select an IP address";
                     MessageBox.Show(
                     "Found more than 1 device on your local network. Please select one in the list and click the 'Connect' button.",
                     "Multiple devices found", MessageBoxButtons.OK);
@@ -1032,11 +1036,10 @@ namespace SignalAnalyzerApplication
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void cmbIPAddresses_SelectedIndexChanged(object sender, EventArgs e)
-        {            
-            ComboboxItem selectedItem = cmbIPAddresses.SelectedItem as ComboboxItem;
-            if (selectedItem != null)
+        {                        
+            if (cmbIPAddresses.SelectedIndex > -1)
             {
-                string ip = (string)selectedItem.Value;
+                string ip = cmbIPAddresses.Text;
                 btnConnect.Enabled = !string.IsNullOrEmpty(ip);
                 if (btnConnect.Enabled)
                 {
