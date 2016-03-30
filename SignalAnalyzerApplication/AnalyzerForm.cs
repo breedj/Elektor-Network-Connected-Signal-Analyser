@@ -436,7 +436,6 @@ namespace SignalAnalyzerApplication
             else
                 samplingSettings.ADCS = (byte)(cmbADCS.SelectedIndex + 2);
             _analyzer.SamplingSettings = samplingSettings; // Set analyzer with new values.
-            lblADCSActualValue.Text = _analyzer.ActualADCS.ToString();
             if (samplingSettings.Fs <= tbSamplesPerSecond.Maximum)
                 tbSamplesPerSecond.Value = samplingSettings.Fs;
             else

@@ -31,14 +31,13 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 2D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(3D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(500000D, 0D);
             System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 2D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(3D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(3D, 0D);
             System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.spectrum = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -86,7 +85,6 @@
             this.lblMinCurrent = new System.Windows.Forms.Label();
             this.lblMinAvg = new System.Windows.Forms.Label();
             this.btnSinleShot = new System.Windows.Forms.Button();
-            this.btnConnect = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.radioVisDots = new System.Windows.Forms.RadioButton();
             this.radioVisLine = new System.Windows.Forms.RadioButton();
@@ -94,7 +92,6 @@
             this.rbCouplingDC = new System.Windows.Forms.RadioButton();
             this.rbCouplingAC = new System.Windows.Forms.RadioButton();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.lblADCSActualValue = new System.Windows.Forms.Label();
             this.cmbADCS = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.lblSamplingSettings = new System.Windows.Forms.Label();
@@ -135,6 +132,7 @@
             this.btnFindDevices = new System.Windows.Forms.Button();
             this.rbVrms = new System.Windows.Forms.RadioButton();
             this.rbDbm = new System.Windows.Forms.RadioButton();
+            this.btnConnect = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.spectrum)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -164,16 +162,15 @@
             chartArea1.CursorY.IsUserEnabled = true;
             chartArea1.Name = "ChartArea1";
             this.spectrum.ChartAreas.Add(chartArea1);
-            this.spectrum.Location = new System.Drawing.Point(12, 519);
+            this.spectrum.Location = new System.Drawing.Point(12, 406);
             this.spectrum.Name = "spectrum";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.Name = "Series1";
             series1.Points.Add(dataPoint1);
             series1.Points.Add(dataPoint2);
-            series1.Points.Add(dataPoint3);
             this.spectrum.Series.Add(series1);
-            this.spectrum.Size = new System.Drawing.Size(1214, 338);
+            this.spectrum.Size = new System.Drawing.Size(1040, 337);
             this.spectrum.TabIndex = 2;
             title1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             title1.Name = "Title1";
@@ -191,9 +188,9 @@
             this.groupBox1.Controls.Add(this.WindowWelch);
             this.groupBox1.Controls.Add(this.WindowParzen);
             this.groupBox1.Controls.Add(this.WindowNone);
-            this.groupBox1.Location = new System.Drawing.Point(1261, 530);
+            this.groupBox1.Location = new System.Drawing.Point(1072, 489);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(163, 182);
+            this.groupBox1.Size = new System.Drawing.Size(163, 115);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Window Type";
@@ -201,7 +198,7 @@
             // Window30dB
             // 
             this.Window30dB.AutoSize = true;
-            this.Window30dB.Location = new System.Drawing.Point(6, 157);
+            this.Window30dB.Location = new System.Drawing.Point(78, 88);
             this.Window30dB.Name = "Window30dB";
             this.Window30dB.Size = new System.Drawing.Size(81, 17);
             this.Window30dB.TabIndex = 6;
@@ -212,7 +209,7 @@
             // WindowBlackman
             // 
             this.WindowBlackman.AutoSize = true;
-            this.WindowBlackman.Location = new System.Drawing.Point(6, 134);
+            this.WindowBlackman.Location = new System.Drawing.Point(78, 65);
             this.WindowBlackman.Name = "WindowBlackman";
             this.WindowBlackman.Size = new System.Drawing.Size(72, 17);
             this.WindowBlackman.TabIndex = 5;
@@ -223,7 +220,7 @@
             // WindowHamming
             // 
             this.WindowHamming.AutoSize = true;
-            this.WindowHamming.Location = new System.Drawing.Point(6, 111);
+            this.WindowHamming.Location = new System.Drawing.Point(78, 42);
             this.WindowHamming.Name = "WindowHamming";
             this.WindowHamming.Size = new System.Drawing.Size(69, 17);
             this.WindowHamming.TabIndex = 4;
@@ -282,7 +279,7 @@
             this.btnStartAcquisition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStartAcquisition.BackColor = System.Drawing.Color.Red;
             this.btnStartAcquisition.Enabled = false;
-            this.btnStartAcquisition.Location = new System.Drawing.Point(1332, 36);
+            this.btnStartAcquisition.Location = new System.Drawing.Point(1143, 33);
             this.btnStartAcquisition.Name = "btnStartAcquisition";
             this.btnStartAcquisition.Size = new System.Drawing.Size(45, 34);
             this.btnStartAcquisition.TabIndex = 42;
@@ -300,7 +297,7 @@
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.cmbTriggerSlope);
             this.groupBox3.Controls.Add(this.cmbTriggerMode);
-            this.groupBox3.Location = new System.Drawing.Point(1261, 167);
+            this.groupBox3.Location = new System.Drawing.Point(1072, 157);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(163, 99);
             this.groupBox3.TabIndex = 46;
@@ -385,12 +382,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbTriggerLevel.BackColor = System.Drawing.Color.White;
             this.tbTriggerLevel.LargeChange = 10;
-            this.tbTriggerLevel.Location = new System.Drawing.Point(1182, 100);
+            this.tbTriggerLevel.Location = new System.Drawing.Point(1007, 93);
             this.tbTriggerLevel.Maximum = 250;
             this.tbTriggerLevel.Minimum = -250;
             this.tbTriggerLevel.Name = "tbTriggerLevel";
             this.tbTriggerLevel.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.tbTriggerLevel.Size = new System.Drawing.Size(45, 413);
+            this.tbTriggerLevel.Size = new System.Drawing.Size(45, 307);
             this.tbTriggerLevel.TabIndex = 0;
             this.tbTriggerLevel.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.tbTriggerLevel.ValueChanged += new System.EventHandler(this.tbTriggerLevel_ValueChanged);
@@ -424,9 +421,9 @@
             this.groupBox4.Controls.Add(this.label18);
             this.groupBox4.Controls.Add(this.lblMinCurrent);
             this.groupBox4.Controls.Add(this.lblMinAvg);
-            this.groupBox4.Location = new System.Drawing.Point(12, 12);
+            this.groupBox4.Location = new System.Drawing.Point(12, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(1215, 84);
+            this.groupBox4.Size = new System.Drawing.Size(1042, 84);
             this.groupBox4.TabIndex = 69;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Statistics";
@@ -710,7 +707,7 @@
             this.btnSinleShot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSinleShot.BackColor = System.Drawing.Color.Gainsboro;
             this.btnSinleShot.Enabled = false;
-            this.btnSinleShot.Location = new System.Drawing.Point(1379, 36);
+            this.btnSinleShot.Location = new System.Drawing.Point(1190, 33);
             this.btnSinleShot.Name = "btnSinleShot";
             this.btnSinleShot.Size = new System.Drawing.Size(45, 34);
             this.btnSinleShot.TabIndex = 71;
@@ -718,24 +715,12 @@
             this.btnSinleShot.UseVisualStyleBackColor = false;
             this.btnSinleShot.Click += new System.EventHandler(this.btnSinleShot_Click);
             // 
-            // btnConnect
-            // 
-            this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.Enabled = false;
-            this.btnConnect.Location = new System.Drawing.Point(1259, 36);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(73, 34);
-            this.btnConnect.TabIndex = 72;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
             // groupBox5
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.radioVisDots);
             this.groupBox5.Controls.Add(this.radioVisLine);
-            this.groupBox5.Location = new System.Drawing.Point(1261, 118);
+            this.groupBox5.Location = new System.Drawing.Point(1072, 113);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(163, 43);
             this.groupBox5.TabIndex = 73;
@@ -771,7 +756,7 @@
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox6.Controls.Add(this.rbCouplingDC);
             this.groupBox6.Controls.Add(this.rbCouplingAC);
-            this.groupBox6.Location = new System.Drawing.Point(1261, 74);
+            this.groupBox6.Location = new System.Drawing.Point(1072, 69);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(163, 43);
             this.groupBox6.TabIndex = 74;
@@ -805,7 +790,6 @@
             // groupBox7
             // 
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox7.Controls.Add(this.lblADCSActualValue);
             this.groupBox7.Controls.Add(this.cmbADCS);
             this.groupBox7.Controls.Add(this.label7);
             this.groupBox7.Controls.Add(this.lblSamplingSettings);
@@ -820,21 +804,12 @@
             this.groupBox7.Controls.Add(this.label19);
             this.groupBox7.Controls.Add(this.tbNoOfSamples);
             this.groupBox7.Controls.Add(this.tbSamplesPerSecond);
-            this.groupBox7.Location = new System.Drawing.Point(1261, 272);
+            this.groupBox7.Location = new System.Drawing.Point(1072, 257);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(163, 252);
+            this.groupBox7.Size = new System.Drawing.Size(163, 230);
             this.groupBox7.TabIndex = 37;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Sampling";
-            // 
-            // lblADCSActualValue
-            // 
-            this.lblADCSActualValue.AutoSize = true;
-            this.lblADCSActualValue.Location = new System.Drawing.Point(119, 178);
-            this.lblADCSActualValue.Name = "lblADCSActualValue";
-            this.lblADCSActualValue.Size = new System.Drawing.Size(13, 13);
-            this.lblADCSActualValue.TabIndex = 96;
-            this.lblADCSActualValue.Text = "6";
             // 
             // cmbADCS
             // 
@@ -863,7 +838,7 @@
             // lblSamplingSettings
             // 
             this.lblSamplingSettings.AutoSize = true;
-            this.lblSamplingSettings.Location = new System.Drawing.Point(5, 200);
+            this.lblSamplingSettings.Location = new System.Drawing.Point(119, 178);
             this.lblSamplingSettings.Name = "lblSamplingSettings";
             this.lblSamplingSettings.Size = new System.Drawing.Size(16, 13);
             this.lblSamplingSettings.TabIndex = 93;
@@ -935,7 +910,7 @@
             // 
             this.lblOutOfSpec.BackColor = System.Drawing.Color.OrangeRed;
             this.lblOutOfSpec.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOutOfSpec.Location = new System.Drawing.Point(8, 219);
+            this.lblOutOfSpec.Location = new System.Drawing.Point(8, 203);
             this.lblOutOfSpec.Name = "lblOutOfSpec";
             this.lblOutOfSpec.Padding = new System.Windows.Forms.Padding(3, 2, 1, 1);
             this.lblOutOfSpec.Size = new System.Drawing.Size(147, 21);
@@ -1015,7 +990,7 @@
             // 
             this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(1259, 722);
+            this.label29.Location = new System.Drawing.Point(1073, 610);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(68, 13);
             this.label29.TabIndex = 88;
@@ -1025,7 +1000,7 @@
             // 
             this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(1367, 722);
+            this.label25.Location = new System.Drawing.Point(1181, 610);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(52, 13);
             this.label25.TabIndex = 87;
@@ -1034,7 +1009,7 @@
             // udFFTAverages
             // 
             this.udFFTAverages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.udFFTAverages.Location = new System.Drawing.Point(1328, 718);
+            this.udFFTAverages.Location = new System.Drawing.Point(1142, 606);
             this.udFFTAverages.Maximum = new decimal(new int[] {
             10,
             0,
@@ -1060,7 +1035,7 @@
             this.lblFFTResolution.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblFFTResolution.AutoSize = true;
             this.lblFFTResolution.BackColor = System.Drawing.Color.White;
-            this.lblFFTResolution.Location = new System.Drawing.Point(31, 831);
+            this.lblFFTResolution.Location = new System.Drawing.Point(31, 717);
             this.lblFFTResolution.Name = "lblFFTResolution";
             this.lblFFTResolution.Size = new System.Drawing.Size(57, 13);
             this.lblFFTResolution.TabIndex = 92;
@@ -1071,7 +1046,7 @@
             this.lblFFTFrequency.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblFFTFrequency.AutoSize = true;
             this.lblFFTFrequency.BackColor = System.Drawing.Color.White;
-            this.lblFFTFrequency.Location = new System.Drawing.Point(170, 831);
+            this.lblFFTFrequency.Location = new System.Drawing.Point(170, 717);
             this.lblFFTFrequency.Name = "lblFFTFrequency";
             this.lblFFTFrequency.Size = new System.Drawing.Size(84, 13);
             this.lblFFTFrequency.TabIndex = 93;
@@ -1086,7 +1061,7 @@
             this.groupBox2.Controls.Add(this.txtGeneratorFreq);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbGeneratorWaveform);
-            this.groupBox2.Location = new System.Drawing.Point(1260, 741);
+            this.groupBox2.Location = new System.Drawing.Point(1070, 631);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(164, 113);
             this.groupBox2.TabIndex = 99;
@@ -1165,7 +1140,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDCOffset.AutoSize = true;
             this.lblDCOffset.BackColor = System.Drawing.Color.White;
-            this.lblDCOffset.Location = new System.Drawing.Point(22, 486);
+            this.lblDCOffset.Location = new System.Drawing.Point(22, 377);
             this.lblDCOffset.Name = "lblDCOffset";
             this.lblDCOffset.Size = new System.Drawing.Size(54, 13);
             this.lblDCOffset.TabIndex = 94;
@@ -1177,7 +1152,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblScopeFrequency.AutoSize = true;
             this.lblScopeFrequency.BackColor = System.Drawing.Color.White;
-            this.lblScopeFrequency.Location = new System.Drawing.Point(284, 486);
+            this.lblScopeFrequency.Location = new System.Drawing.Point(249, 378);
             this.lblScopeFrequency.Name = "lblScopeFrequency";
             this.lblScopeFrequency.Size = new System.Drawing.Size(13, 13);
             this.lblScopeFrequency.TabIndex = 95;
@@ -1189,7 +1164,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblWaveformsSecond.AutoSize = true;
             this.lblWaveformsSecond.BackColor = System.Drawing.Color.White;
-            this.lblWaveformsSecond.Location = new System.Drawing.Point(492, 486);
+            this.lblWaveformsSecond.Location = new System.Drawing.Point(432, 378);
             this.lblWaveformsSecond.Name = "lblWaveformsSecond";
             this.lblWaveformsSecond.Size = new System.Drawing.Size(13, 13);
             this.lblWaveformsSecond.TabIndex = 96;
@@ -1201,7 +1176,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(179, 486);
+            this.label2.Location = new System.Drawing.Point(144, 378);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(107, 13);
             this.label2.TabIndex = 97;
@@ -1213,7 +1188,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(393, 486);
+            this.label3.Location = new System.Drawing.Point(333, 378);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 13);
             this.label3.TabIndex = 98;
@@ -1232,17 +1207,17 @@
             chartArea2.CursorY.IsUserEnabled = true;
             chartArea2.Name = "ChartArea1";
             this.dataIn.ChartAreas.Add(chartArea2);
-            this.dataIn.Location = new System.Drawing.Point(12, 100);
+            this.dataIn.Location = new System.Drawing.Point(12, 93);
             this.dataIn.Name = "dataIn";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series2.MarkerSize = 1;
             series2.Name = "Series1";
+            series2.Points.Add(dataPoint3);
             series2.Points.Add(dataPoint4);
             series2.Points.Add(dataPoint5);
-            series2.Points.Add(dataPoint6);
             this.dataIn.Series.Add(series2);
-            this.dataIn.Size = new System.Drawing.Size(1173, 413);
+            this.dataIn.Size = new System.Drawing.Size(996, 307);
             this.dataIn.TabIndex = 1;
             title2.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             title2.Name = "Title1";
@@ -1252,11 +1227,11 @@
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(169, 114);
+            this.label6.Location = new System.Drawing.Point(169, 121);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(40, 13);
             this.label6.TabIndex = 100;
@@ -1268,7 +1243,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblScopeCursor.AutoSize = true;
             this.lblScopeCursor.BackColor = System.Drawing.Color.White;
-            this.lblScopeCursor.Location = new System.Drawing.Point(212, 114);
+            this.lblScopeCursor.Location = new System.Drawing.Point(212, 121);
             this.lblScopeCursor.Name = "lblScopeCursor";
             this.lblScopeCursor.Size = new System.Drawing.Size(13, 13);
             this.lblScopeCursor.TabIndex = 101;
@@ -1280,7 +1255,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFFTCursor.AutoSize = true;
             this.lblFFTCursor.BackColor = System.Drawing.Color.White;
-            this.lblFFTCursor.Location = new System.Drawing.Point(212, 534);
+            this.lblFFTCursor.Location = new System.Drawing.Point(212, 434);
             this.lblFFTCursor.Name = "lblFFTCursor";
             this.lblFFTCursor.Size = new System.Drawing.Size(13, 13);
             this.lblFFTCursor.TabIndex = 103;
@@ -1292,7 +1267,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
             this.label8.BackColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(169, 534);
+            this.label8.Location = new System.Drawing.Point(169, 434);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(40, 13);
             this.label8.TabIndex = 102;
@@ -1300,8 +1275,9 @@
             // 
             // cmbIPAddresses
             // 
+            this.cmbIPAddresses.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbIPAddresses.FormattingEnabled = true;
-            this.cmbIPAddresses.Location = new System.Drawing.Point(1259, 9);
+            this.cmbIPAddresses.Location = new System.Drawing.Point(1070, 9);
             this.cmbIPAddresses.Name = "cmbIPAddresses";
             this.cmbIPAddresses.Size = new System.Drawing.Size(118, 21);
             this.cmbIPAddresses.TabIndex = 104;
@@ -1311,7 +1287,7 @@
             // 
             this.btnFindDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFindDevices.BackColor = System.Drawing.Color.Gainsboro;
-            this.btnFindDevices.Location = new System.Drawing.Point(1379, 9);
+            this.btnFindDevices.Location = new System.Drawing.Point(1190, 9);
             this.btnFindDevices.Name = "btnFindDevices";
             this.btnFindDevices.Size = new System.Drawing.Size(45, 21);
             this.btnFindDevices.TabIndex = 105;
@@ -1321,9 +1297,10 @@
             // 
             // rbVrms
             // 
+            this.rbVrms.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rbVrms.AutoSize = true;
             this.rbVrms.BackColor = System.Drawing.Color.White;
-            this.rbVrms.Location = new System.Drawing.Point(72, 533);
+            this.rbVrms.Location = new System.Drawing.Point(73, 425);
             this.rbVrms.Name = "rbVrms";
             this.rbVrms.Size = new System.Drawing.Size(48, 17);
             this.rbVrms.TabIndex = 106;
@@ -1333,10 +1310,11 @@
             // 
             // rbDbm
             // 
+            this.rbDbm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rbDbm.AutoSize = true;
             this.rbDbm.BackColor = System.Drawing.Color.White;
             this.rbDbm.Checked = true;
-            this.rbDbm.Location = new System.Drawing.Point(19, 533);
+            this.rbDbm.Location = new System.Drawing.Point(20, 425);
             this.rbDbm.Name = "rbDbm";
             this.rbDbm.Size = new System.Drawing.Size(46, 17);
             this.rbDbm.TabIndex = 107;
@@ -1345,13 +1323,25 @@
             this.rbDbm.UseVisualStyleBackColor = false;
             this.rbDbm.CheckedChanged += new System.EventHandler(this.rbDbm_CheckedChanged);
             // 
+            // btnConnect
+            // 
+            this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConnect.Enabled = false;
+            this.btnConnect.Location = new System.Drawing.Point(1070, 33);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(73, 34);
+            this.btnConnect.TabIndex = 72;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
             // SygnalAnalyzerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.DarkKhaki;
-            this.ClientSize = new System.Drawing.Size(1436, 863);
+            this.ClientSize = new System.Drawing.Size(1247, 749);
             this.Controls.Add(this.rbDbm);
             this.Controls.Add(this.rbVrms);
             this.Controls.Add(this.btnFindDevices);
@@ -1455,7 +1445,6 @@
         private System.Windows.Forms.Label lblMinCurrent;
         private System.Windows.Forms.Label lblMinAvg;
         private System.Windows.Forms.Button btnSinleShot;
-        private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnResetAverages;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton radioVisLine;
@@ -1505,11 +1494,11 @@
         private System.Windows.Forms.Label lblSamplingSettings;
         private System.Windows.Forms.ComboBox cmbADCS;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label lblADCSActualValue;
         private System.Windows.Forms.CheckBox chkDrawMinTrace;
         private System.Windows.Forms.CheckBox chkDrawMaxTrace;
         private System.Windows.Forms.RadioButton rbVrms;
         private System.Windows.Forms.RadioButton rbDbm;
+        private System.Windows.Forms.Button btnConnect;
     }
 }
 

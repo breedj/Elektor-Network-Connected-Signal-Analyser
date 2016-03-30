@@ -84,8 +84,12 @@ namespace SignalAnalyzerApplication
             cmbSelectFormula.Items.Add(new ComboboxItem { Text = "Square wave", Value = "4 / PI * (Cos(2 * PI * fc * t) - .3333 * Cos(2 * PI * 3 * fc * t) + .2 * Cos(2 * PI * 5 * fc * t) - .1429 * Cos(2 * PI * 7 * fc * t) + .1111 * Cos(2 * PI * 9 * fc * t))" });
             cmbSelectFormula.Items.Add(new ComboboxItem { Text = "PM modulated", Value = "Sin(2 * PI * fc * t + PI * (modlevel / 100) * Cos(2 * PI * fm * t))" });
             cmbSelectFormula.Items.Add(new ComboboxItem { Text = "Test Signal", Value = "Sin(2 * PI * 1000 * t) + .5 * Sin(2 * PI * 2000 * t + 3 * PI / 4)" });  //see "Understanding Digital Signal Processing", Lyons, p63            
+
+            // Load a default signal
+            cmbSelectFormula.SelectedIndex = 3;
+            Evaluate();
         }
-        
+
 
         /// <summary>
         /// Cursor changed event of scope view
