@@ -521,9 +521,8 @@ namespace Elektor.SignalAnalyzer
                     while (toRead > 0 && (read = clientStream.Read(rxBuff, offset, toRead)) > 0)
                     {
                         toRead -= read;
-                        offset += read;
-                    }
-                    
+                        offset += read;                        
+                    }                    
                     // 2 bytes received is one sample, convert samples to one integer each
                     double[] samples = new double[sampleCount];
                     int s = 0;

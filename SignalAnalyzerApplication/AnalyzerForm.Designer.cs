@@ -133,6 +133,12 @@
             this.rbVrms = new System.Windows.Forms.RadioButton();
             this.rbDbm = new System.Windows.Forms.RadioButton();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnNoiseAutoSet = new System.Windows.Forms.Button();
+            this.rbFFTViewSaved = new System.Windows.Forms.RadioButton();
+            this.rbFFTViewCalibrated = new System.Windows.Forms.RadioButton();
+            this.rbFFTViewUncalibrated = new System.Windows.Forms.RadioButton();
+            this.btnCalibrate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.spectrum)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -146,6 +152,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.udFFTAverages)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataIn)).BeginInit();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // spectrum
@@ -423,7 +430,7 @@
             this.groupBox4.Controls.Add(this.lblMinAvg);
             this.groupBox4.Location = new System.Drawing.Point(12, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(1042, 84);
+            this.groupBox4.Size = new System.Drawing.Size(707, 84);
             this.groupBox4.TabIndex = 69;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Statistics";
@@ -1011,7 +1018,7 @@
             this.udFFTAverages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.udFFTAverages.Location = new System.Drawing.Point(1142, 606);
             this.udFFTAverages.Maximum = new decimal(new int[] {
-            10,
+            50,
             0,
             0,
             0});
@@ -1335,6 +1342,72 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.btnNoiseAutoSet);
+            this.groupBox8.Controls.Add(this.rbFFTViewSaved);
+            this.groupBox8.Controls.Add(this.rbFFTViewCalibrated);
+            this.groupBox8.Controls.Add(this.rbFFTViewUncalibrated);
+            this.groupBox8.Controls.Add(this.btnCalibrate);
+            this.groupBox8.Location = new System.Drawing.Point(725, 3);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(327, 84);
+            this.groupBox8.TabIndex = 108;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "White noise calibration";
+            // 
+            // btnNoiseAutoSet
+            // 
+            this.btnNoiseAutoSet.Location = new System.Drawing.Point(16, 20);
+            this.btnNoiseAutoSet.Name = "btnNoiseAutoSet";
+            this.btnNoiseAutoSet.Size = new System.Drawing.Size(75, 23);
+            this.btnNoiseAutoSet.TabIndex = 79;
+            this.btnNoiseAutoSet.Text = "Auto set white noise";
+            this.btnNoiseAutoSet.UseVisualStyleBackColor = true;
+            this.btnNoiseAutoSet.Click += new System.EventHandler(this.btnNoiseAutoSet_Click);
+            // 
+            // rbFFTViewSaved
+            // 
+            this.rbFFTViewSaved.AutoSize = true;
+            this.rbFFTViewSaved.Location = new System.Drawing.Point(145, 58);
+            this.rbFFTViewSaved.Name = "rbFFTViewSaved";
+            this.rbFFTViewSaved.Size = new System.Drawing.Size(126, 17);
+            this.rbFFTViewSaved.TabIndex = 78;
+            this.rbFFTViewSaved.Text = "View saved spectrum";
+            this.rbFFTViewSaved.UseVisualStyleBackColor = true;
+            // 
+            // rbFFTViewCalibrated
+            // 
+            this.rbFFTViewCalibrated.AutoSize = true;
+            this.rbFFTViewCalibrated.Location = new System.Drawing.Point(145, 38);
+            this.rbFFTViewCalibrated.Name = "rbFFTViewCalibrated";
+            this.rbFFTViewCalibrated.Size = new System.Drawing.Size(143, 17);
+            this.rbFFTViewCalibrated.TabIndex = 77;
+            this.rbFFTViewCalibrated.Text = "View calibrated spectrum";
+            this.rbFFTViewCalibrated.UseVisualStyleBackColor = true;
+            // 
+            // rbFFTViewUncalibrated
+            // 
+            this.rbFFTViewUncalibrated.AutoSize = true;
+            this.rbFFTViewUncalibrated.Checked = true;
+            this.rbFFTViewUncalibrated.Location = new System.Drawing.Point(145, 18);
+            this.rbFFTViewUncalibrated.Name = "rbFFTViewUncalibrated";
+            this.rbFFTViewUncalibrated.Size = new System.Drawing.Size(155, 17);
+            this.rbFFTViewUncalibrated.TabIndex = 76;
+            this.rbFFTViewUncalibrated.TabStop = true;
+            this.rbFFTViewUncalibrated.Text = "View uncalibrated spectrum";
+            this.rbFFTViewUncalibrated.UseVisualStyleBackColor = true;
+            // 
+            // btnCalibrate
+            // 
+            this.btnCalibrate.Location = new System.Drawing.Point(16, 49);
+            this.btnCalibrate.Name = "btnCalibrate";
+            this.btnCalibrate.Size = new System.Drawing.Size(75, 23);
+            this.btnCalibrate.TabIndex = 75;
+            this.btnCalibrate.Text = "Calibrate";
+            this.btnCalibrate.UseVisualStyleBackColor = true;
+            this.btnCalibrate.Click += new System.EventHandler(this.btnCalibrate_Click);
+            // 
             // SygnalAnalyzerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1342,6 +1415,7 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.DarkKhaki;
             this.ClientSize = new System.Drawing.Size(1247, 749);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.rbDbm);
             this.Controls.Add(this.rbVrms);
             this.Controls.Add(this.btnFindDevices);
@@ -1399,6 +1473,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataIn)).EndInit();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1499,6 +1575,12 @@
         private System.Windows.Forms.RadioButton rbVrms;
         private System.Windows.Forms.RadioButton rbDbm;
         private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.RadioButton rbFFTViewSaved;
+        private System.Windows.Forms.RadioButton rbFFTViewCalibrated;
+        private System.Windows.Forms.RadioButton rbFFTViewUncalibrated;
+        private System.Windows.Forms.Button btnCalibrate;
+        private System.Windows.Forms.Button btnNoiseAutoSet;
     }
 }
 

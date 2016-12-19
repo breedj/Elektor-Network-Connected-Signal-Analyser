@@ -37,7 +37,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(243, 36);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Discovering devices on your local network.\r\nThis may take while. Please wait.";
+            this.label1.Text = "Discovering devices on your local network.\r\nThis may take a while. Please wait.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmWaitFindDevices

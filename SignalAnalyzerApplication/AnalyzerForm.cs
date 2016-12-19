@@ -14,6 +14,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Collections;
 
 namespace SignalAnalyzerApplication
 {
@@ -35,7 +36,12 @@ namespace SignalAnalyzerApplication
         private readonly SignalAnalyzer _analyzer = new SignalAnalyzer();
         private readonly SignalGenerator _signalGenator = new SignalGenerator();
         private readonly Stopwatch _swScopeRender = new Stopwatch();      // To time the amount of time it takes to render the scope view
-        
+        private double[] _calibrationDataFreqDomain;
+        private double[] _calibrationDataVrms;
+        private FFTData _fftData = null;
+        private object lck = new object();
+
+
         public SygnalAnalyzerForm()
         {
             InitializeComponent();                  
@@ -393,6 +399,8 @@ namespace SignalAnalyzerApplication
             if (chkPreventJitter.Checked)
             {
                 SamplingSettings samplingSettings = _analyzer.GetSpurFreeSampleFrequency(tbSamplesPerSecond.Value, !chkEnableSignalGenerator.Checked);
+                if (samplingSettings.Fs >= tbSamplesPerSecond.Maximum)
+                    samplingSettings.Fs = tbSamplesPerSecond.Maximum;
                 txtSamplesPerSecond.Text = samplingSettings.Fs.ToString();
                 tbSamplesPerSecond.Value = samplingSettings.Fs;
             }
@@ -421,7 +429,7 @@ namespace SignalAnalyzerApplication
         }
 
         /// <summary>
-        /// Set the sampling values and sent do analyzer
+        /// Set the sampling values and sent to analyzer
         /// </summary>
         private void SetSamplingVariables()
         {
@@ -738,7 +746,7 @@ namespace SignalAnalyzerApplication
                     }
                     // Draw points
                     dataIn.Series["Series1"].Points.DataBindXY(xPoints, yPoints);
-
+                    dataIn.Update();
                     // Draw min/max trace                   
                     // Draw min/max trace                   
                     if (chkDrawMinTrace.Checked)
@@ -762,7 +770,7 @@ namespace SignalAnalyzerApplication
                         dataIn.Series["Series3"].Points.DataBindXY(xPoints, data.Statistics.MaxTrace.Take(xPoints.Length).ToArray());
                     }
                 }
-                    
+                
                 RenderScopeStats(data);
                 RenderDisplayUpdateRate();
 
@@ -864,6 +872,10 @@ namespace SignalAnalyzerApplication
         {           
             try
             {
+                lock (lck)
+                {
+                    _fftData = data;
+                }
                 spectrum.Series.RemoveAt(0);
                 spectrum.Series.Add("Series1");
                 spectrum.Series["Series1"].ChartArea = "ChartArea1";
@@ -871,8 +883,34 @@ namespace SignalAnalyzerApplication
                 spectrum.Series["Series1"].MarkerSize = 1;                    
 
                 if (data != null)
-                {                        
-                    double[] yPoints = rbDbm.Checked ? data.FreqDomain : data.Vrms;
+                {
+                    double[] yPoints = null;
+                    if (rbFFTViewUncalibrated.Checked)
+                        yPoints = rbDbm.Checked ? data.FreqDomain : data.Vrms;
+                    else if (rbFFTViewCalibrated.Checked)
+                    {                        
+                        var calData = rbDbm.Checked ? _calibrationDataFreqDomain : _calibrationDataVrms;
+                        var curData = rbDbm.Checked ? data.FreqDomain : data.Vrms;
+                        int cnt = curData.Length < calData.Length ? curData.Length : calData.Length; // Take shortest
+                        yPoints = new double[cnt];
+                        if (rbDbm.Checked)
+                        {
+                            for (int i = 0; i < cnt; i++)
+                            {
+                                yPoints[i] = Math.Abs(calData[i]) + curData[i]; // reference - current spectrum
+                            }
+                        }    
+                        else
+                        {
+                            for (int i = 0; i < cnt; i++)
+                            {
+                                yPoints[i] = curData[i] - calData[i];
+                            }
+                        }                   
+                    }
+                    else if (rbFFTViewSaved.Checked)
+                        yPoints = rbDbm.Checked ? _calibrationDataFreqDomain : _calibrationDataVrms;
+
                     double[] xPoints = Enumerable.Range(0, yPoints.Count()).Select(s => s * (double)data.SamplesPerSecond / data.FreqDomain.Length / 2).ToArray();
                                         
                     spectrum.ChartAreas["ChartArea1"].CursorX.Interval = data.SamplesPerSecond / (double)data.FreqDomain.Length / 2.0;        //matches cursor step size to X axis step size
@@ -978,6 +1016,16 @@ namespace SignalAnalyzerApplication
         private void cmbGeneratorWaveform_SelectedIndexChanged(object sender, EventArgs e)
         {
             _signalGenator.Waveform = (GeneratorWaveforms)cmbGeneratorWaveform.SelectedIndex + 1;
+            if (_signalGenator.Waveform == GeneratorWaveforms.Noise)
+            {
+                txtGeneratorFreq.Enabled = false;
+                btnSetGeneratorFreq.Enabled = false;
+            }
+            else
+            {
+                txtGeneratorFreq.Enabled = true;
+                btnSetGeneratorFreq.Enabled = true;
+            }
         }
 
         private void btnSetGeneratorFreq_Click(object sender, EventArgs e)
@@ -1072,6 +1120,38 @@ namespace SignalAnalyzerApplication
         {
             rbVrms.Checked = !rbDbm.Checked;
             spectrum.ChartAreas[0].AxisY.Minimum = rbDbm.Checked ? -120 : double.NaN;
+        }
+
+        
+        private void btnCalibrate_Click(object sender, EventArgs e)
+        {
+            if (udFFTAverages.Value <= 1)
+            {
+                var msgResult = MessageBox.Show("You are averaging the FFT values. It is advised to use the average of at least 10 measurements before calibrating.", "Averages", MessageBoxButtons.OK);                
+            }
+
+            lock (lck)
+            {
+                if (_fftData != null)
+                {
+                    _calibrationDataFreqDomain = _fftData.FreqDomain.ToArray();
+                    _calibrationDataVrms = _fftData.Vrms.ToArray();
+                    if (udFFTAverages.Value > 1)
+                        rbFFTViewCalibrated.Checked = true;
+                }                
+                else
+                {
+                    MessageBox.Show("No data yet, might be collecting averages. Try again when FFT appears.");
+                }
+            }            
+        }
+
+        private void btnNoiseAutoSet_Click(object sender, EventArgs e)
+        {            
+            chkEnableSignalGenerator.Checked = true;
+            cmbGeneratorWaveform.SelectedIndex = 3;
+            udFFTAverages.Value = 25;
+            MessageBox.Show("White noise generator has been enabled and FFT set to 25 averages.");
         }
     }
     
