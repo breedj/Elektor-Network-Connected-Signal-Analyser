@@ -42,9 +42,9 @@ namespace Elektor.SignalAnalyzer
 
             scopeData.Triggered = scopeData.TriggerSamples.Any();
             if (scopeData.Triggered && scopeData.TriggerSamples.Count > 1)
-                scopeData.Statistics.Calculate(voltages, scopeData.TriggerSamples.First()); // Calculate statistics
+                scopeData.Statistics.Calculate(voltages, scopeData.TriggerSamples.First(), TriggerMode != TriggerModes.Off); // Calculate statistics
             else
-                scopeData.Statistics.Calculate(voltages, null); // Calculate statistics
+                scopeData.Statistics.Calculate(voltages, null, TriggerMode != TriggerModes.Off); // Calculate statistics
             return scopeData;
         }
 

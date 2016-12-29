@@ -15,7 +15,7 @@ namespace Elektor.SignalAnalyzer
         /// Calculate statistics from samples
         /// </summary>
         /// <param name="samples"></param>
-        public void Calculate(double[] samples, int? firstTriggerPoint)
+        public void Calculate(double[] samples, int? firstTriggerPoint, bool triggerEnabled)
         {
             
             Max = samples.Max();
@@ -23,7 +23,17 @@ namespace Elektor.SignalAnalyzer
             Average = samples.Average();
             PeekToPeek = Math.Abs(Max - Min);
 
-            if (firstTriggerPoint.HasValue)
+            int startValue = 0;
+            bool doCalculate = true;
+            if (triggerEnabled)
+            {
+                // When triggering enabled then only calculate min max when we have a trigger point.
+                doCalculate = firstTriggerPoint.HasValue;
+                if (doCalculate)
+                    startValue = firstTriggerPoint.Value;                
+            }                        
+
+            if (doCalculate)
             {
                 lock (lockObj)
                 {
@@ -32,7 +42,7 @@ namespace Elektor.SignalAnalyzer
                     if (_maxTrace.Length != samples.Length)
                         _maxTrace = new double[samples.Length];
                     int p = 0;
-                    for (int i = firstTriggerPoint.Value; i < samples.Length; i++)
+                    for (int i = startValue; i < samples.Length; i++)
                     {
                         if (_minTrace[p] > samples[i])
                             _minTrace[p] = samples[i];
@@ -41,7 +51,7 @@ namespace Elektor.SignalAnalyzer
                         p++;
                     }
                 }
-            }
+            }                        
         }
 
 
@@ -238,7 +248,7 @@ namespace Elektor.SignalAnalyzer
             lock (lockObj)
             {
                 for (int i = 0; i < _minTrace.Length; i++)
-                    _minTrace[i] = 0.25;                
+                    _minTrace[i] = 0.01;                
             }
         }
 
@@ -250,7 +260,7 @@ namespace Elektor.SignalAnalyzer
             lock (lockObj)
             {
                 for (int i = 0; i < _maxTrace.Length; i++)
-                    _maxTrace[i] = -0.25;
+                    _maxTrace[i] = -0.01;
             }
         }
 
