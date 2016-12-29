@@ -184,7 +184,8 @@ resid = data;
         }
     }
 
-    //https://www.dsprelated.com/freebooks/sasp/Matlab_listing_qint_m.html
+    // https://www.dsprelated.com/freebooks/sasp/Matlab_listing_qint_m.html
+    // https://www.dsprelated.com/freebooks/sasp/Matlab_listing_findpeaks_m.html
 
     public class PeakDetectionData
     {

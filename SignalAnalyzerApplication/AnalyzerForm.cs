@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace SignalAnalyzerApplication
 {
@@ -30,50 +31,52 @@ namespace SignalAnalyzerApplication
         #endregion
 
         private string ipAddress = string.Empty; // for now fixed. Put back detection funcationality.
-        private int _scopeRenderInterval = 50;   // Initial value of scope render time in ms
-        private DateTime _tmrWfs = DateTime.Now; // Update rate timing
         private readonly ClientConnection _connection = new ClientConnection();
         private readonly SignalAnalyzer _analyzer = new SignalAnalyzer();
         private readonly SignalGenerator _signalGenator = new SignalGenerator();
-        private readonly Stopwatch _swScopeRender = new Stopwatch();      // To time the amount of time it takes to render the scope view
         private double[] _calibrationDataFreqDomain;
         private double[] _calibrationDataVrms;
         private FFTData _fftData = null;
         private object lck = new object();
+        Stopwatch _swWfs = new Stopwatch();
 
 
         public SygnalAnalyzerForm()
         {
-            InitializeComponent();                  
+            InitializeComponent();            
         }
-
         
+
         private void chart_MouseWheel(object sender, MouseEventArgs e)
         {
             try
             {
+                Chart chart = sender as Chart;
+                if (chart == null)
+                    return;
+
                 if (e.Delta < 0)
                 {
-                    dataIn.ChartAreas[0].AxisX.ScaleView.ZoomReset();
-                    dataIn.ChartAreas[0].AxisY.ScaleView.ZoomReset();
+                    chart.ChartAreas[0].AxisX.ScaleView.ZoomReset();
+                    chart.ChartAreas[0].AxisY.ScaleView.ZoomReset();
                 }
 
                 if (e.Delta > 0)
                 {
-                    double xMin = dataIn.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
-                    double xMax = dataIn.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
-                    double yMin = dataIn.ChartAreas[0].AxisY.ScaleView.ViewMinimum;
-                    double yMax = dataIn.ChartAreas[0].AxisY.ScaleView.ViewMaximum;
+                    double xMin = chart.ChartAreas[0].AxisX.ScaleView.ViewMinimum;
+                    double xMax = chart.ChartAreas[0].AxisX.ScaleView.ViewMaximum;
+                    double yMin = chart.ChartAreas[0].AxisY.ScaleView.ViewMinimum;
+                    double yMax = chart.ChartAreas[0].AxisY.ScaleView.ViewMaximum;
 
-                    double posXStart = dataIn.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
-                    double posXFinish = dataIn.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
-                    double posYStart = dataIn.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 4;
-                    double posYFinish = dataIn.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 4;
+                    double posXStart = (int)chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 2;
+                    double posXFinish = (int)chart.ChartAreas[0].AxisX.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 2;
+                    double posYStart = (int)chart.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 2;
+                    double posYFinish = (int)chart.ChartAreas[0].AxisY.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 2;
 
                     if (Control.ModifierKeys == Keys.Shift)
-                        dataIn.ChartAreas[0].AxisY.ScaleView.Zoom(posYStart, posYFinish);
+                        chart.ChartAreas[0].AxisY.ScaleView.Zoom(posYStart, posYFinish);
                     else
-                        dataIn.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish);
+                        chart.ChartAreas[0].AxisX.ScaleView.Zoom(posXStart, posXFinish);
                 }
             }
             catch { }
@@ -117,8 +120,6 @@ namespace SignalAnalyzerApplication
 
             lblSamplingSettings.Text = $"M:60 - N1:2 - fcpu:60.0 MHz";
 
-            _swScopeRender.Start();
-
             LoadSettings();
             SetSamplingVariables();
 
@@ -128,7 +129,12 @@ namespace SignalAnalyzerApplication
             groupBox4.Click += ResetControlFocus;
             groupBox5.Click += ResetControlFocus;
             groupBox6.Click += ResetControlFocus;
-            groupBox7.Click += ResetControlFocus;            
+            groupBox7.Click += ResetControlFocus;
+
+            dataIn.Series.SuspendUpdates();
+            spectrum.Series.SuspendUpdates();
+
+            _swWfs.Start();
         }
 
 
@@ -343,7 +349,9 @@ namespace SignalAnalyzerApplication
         /// <param name="e"></param>
         private void btnResetAverages_Click(object sender, EventArgs e)
         {
-            ScopeData.ResetAverages();                        
+            ScopeData.ResetAverages();
+            ScopeData.ResetMaxTrace();
+            ScopeData.ResetMinTrace();
         }
         
 
@@ -387,6 +395,7 @@ namespace SignalAnalyzerApplication
             if (WindowHamming.Checked) _analyzer.WindowType = WindowingTypes.Hamming;
             if (WindowBlackman.Checked) _analyzer.WindowType = WindowingTypes.Blackman;
             if (Window30dB.Checked) _analyzer.WindowType = WindowingTypes.Steeper30db;
+            FFTData.ResetMaxTrace();
         }
 
         /// <summary>
@@ -451,6 +460,7 @@ namespace SignalAnalyzerApplication
             lblSamplingSettings.Text = $"M:{samplingSettings.M} - N1:{samplingSettings.N1} - fcpu:{(samplingSettings.Fcpu / 1000000.0).ToString("F1")} MHz";
             CheckIfOutOfSpec();
             ScopeData.ResetAverages();
+            FFTData.ResetMaxTrace();
         }
 
 
@@ -675,25 +685,16 @@ namespace SignalAnalyzerApplication
             btnSinleShot.BackColor = Color.LightGreen;
         }
 
-               
 
         /// <summary>
         /// Event handler fired when Scope view has to be rendered
         /// </summary>        
         void analyzer_RenderScope(object sender, ScopeEventArgs e)
-        {            
-            // If the render time is longer than the time between calls of this event, skip rendering.
-            if (_swScopeRender.ElapsedMilliseconds > _scopeRenderInterval)
-            {
-                _swScopeRender.Restart();
-                RenderScopeData(e.ScopeData);
-                _scopeRenderInterval = (int)_swScopeRender.ElapsedMilliseconds + 10;
-                _scopeRenderInterval += (int)(_scopeRenderInterval * 0.1); // Add 10%
-                _swScopeRender.Restart();
-            }                       
+        {
+            RenderScopeData(e.ScopeData);            
         }
-        
-                
+
+        DateTime _lastMinMaxRenderTime = DateTime.Now;
         /// <summary>
         /// Render scope data
         /// </summary>
@@ -702,12 +703,31 @@ namespace SignalAnalyzerApplication
         {           
             try
             {
-                //dataIn.Series.RemoveAt(0);
-                while (dataIn.Series.Count > 0)
+                if (_analyzer.AcquireState == AcquireStates.Stopped)
+                    return;
+
+                bool renderMinMax = false;
+                if (DateTime.Now.Subtract(_lastFftRenderTime).TotalMilliseconds > 200) // Only draw min.max trace 5 times a second
+                {
+                    renderMinMax = true;
+                    _lastFftRenderTime = DateTime.Now;
+                }
+                if (renderMinMax || !(chkDrawMinTrace.Checked || chkDrawMaxTrace.Checked))
+                {   
+                    // Remove all, add series 1                 
+                    while (dataIn.Series.Count > 0)
+                        dataIn.Series.RemoveAt(0);
+                    dataIn.Series.Add("Series1");
+                }
+                else
+                {
+                    // Only remove and add series 1
                     dataIn.Series.RemoveAt(0);
-                dataIn.Series.Add("Series1");
+                    Series series = new Series("Series1");
+                    dataIn.Series.Insert(0, series);                    
+                }                
                 dataIn.Series["Series1"].ChartArea = "ChartArea1";                    
-                dataIn.Series["Series1"].ChartType = radioVisLine.Checked ? SeriesChartType.Line : SeriesChartType.FastPoint;
+                dataIn.Series["Series1"].ChartType = radioVisLine.Checked ? SeriesChartType.FastLine : SeriesChartType.FastPoint;
                 dataIn.Series["Series1"].MarkerSize = 1;
                 double[] xPoints = null;
                 double[] yPoints = null;
@@ -744,31 +764,48 @@ namespace SignalAnalyzerApplication
                         yPoints = data.Voltages.ToArray();
                         xPoints = Enumerable.Range(0, yPoints.Count()).Select(s => s * data.SampleInterval).ToArray();                            
                     }
-                    // Draw points
-                    dataIn.Series["Series1"].Points.DataBindXY(xPoints, yPoints);
-                    dataIn.Update();
+                    
                     // Draw min/max trace                   
-                    // Draw min/max trace                   
-                    if (chkDrawMinTrace.Checked)
+                    double[] mindatapoints = null;
+                    double[] maxdatapoints = null;
+                    if (renderMinMax)
                     {
-                        dataIn.Series.Add("Series2");
-                        dataIn.Series["Series2"].ChartArea = "ChartArea1";
-                        dataIn.Series["Series2"].ChartType = SeriesChartType.Line;
-                        dataIn.Series["Series2"].MarkerSize = 1;
-                        dataIn.Series["Series2"].Color = Color.Orange;
-                        dataIn.Series["Series2"].BorderDashStyle = ChartDashStyle.Dash;
-                        dataIn.Series["Series2"].Points.DataBindXY(xPoints, data.Statistics.MinTrace.Take(xPoints.Length).ToArray());
+                        if (chkDrawMinTrace.Checked)
+                        {
+                            dataIn.Series.Add("Series2");
+                            dataIn.Series["Series2"].ChartArea = "ChartArea1";
+                            dataIn.Series["Series2"].ChartType = SeriesChartType.FastLine;
+                            dataIn.Series["Series2"].MarkerSize = 1;
+                            dataIn.Series["Series2"].Color = Color.Orange;
+                            dataIn.Series["Series2"].BorderDashStyle = ChartDashStyle.Dash;
+                            mindatapoints = data.Statistics.MinTrace.Take(xPoints.Length).ToArray();
+                        }                        
+                        if (chkDrawMaxTrace.Checked)
+                        {
+                            dataIn.Series.Add("Series3");
+                            dataIn.Series["Series3"].ChartArea = "ChartArea1";
+                            dataIn.Series["Series3"].ChartType = SeriesChartType.FastLine;
+                            dataIn.Series["Series3"].MarkerSize = 1;
+                            dataIn.Series["Series3"].Color = Color.Orange;
+                            dataIn.Series["Series3"].BorderDashStyle = ChartDashStyle.Dash;
+                            maxdatapoints = data.Statistics.MaxTrace.Take(xPoints.Length).ToArray();
+                        }
                     }
-                    if (chkDrawMaxTrace.Checked)
+
+                    for (int i = 0; i < xPoints.Length; i++)
                     {
-                        dataIn.Series.Add("Series3");
-                        dataIn.Series["Series3"].ChartArea = "ChartArea1";
-                        dataIn.Series["Series3"].ChartType = SeriesChartType.Line;
-                        dataIn.Series["Series3"].MarkerSize = 1;
-                        dataIn.Series["Series3"].Color = Color.Orange;
-                        dataIn.Series["Series3"].BorderDashStyle = ChartDashStyle.Dash;
-                        dataIn.Series["Series3"].Points.DataBindXY(xPoints, data.Statistics.MaxTrace.Take(xPoints.Length).ToArray());
+                        dataIn.Series["Series1"].Points.AddXY(xPoints[i], yPoints[i]);
+                        if (renderMinMax)
+                        {
+                            if (mindatapoints != null)
+                                dataIn.Series["Series2"].Points.AddXY(xPoints[i], mindatapoints[i]);
+                            if (maxdatapoints != null)
+                                dataIn.Series["Series3"].Points.AddXY(xPoints[i], maxdatapoints[i]);
+                        }
                     }
+                    dataIn.Series.ResumeUpdates();
+                    dataIn.Series.Invalidate();
+                    dataIn.Series.SuspendUpdates();                    
                 }
                 
                 RenderScopeStats(data);
@@ -782,34 +819,38 @@ namespace SignalAnalyzerApplication
                 }
             }
             catch (Exception)
-            {
+            {            
             } 
         }
 
 
-        DateTime _lastUpdateRateRenderTime = DateTime.Now;
+        DateTime _lastUpdateRateRenderTime = DateTime.Now;        
         readonly List<double> updateRates = new List<double>();
+        readonly List<double> dataRates = new List<double>();
         /// <summary>
         /// Calculate and render the display update rate of the scope view.
         /// </summary>
         private void RenderDisplayUpdateRate()
-        {            
-            TimeSpan timeDiff = DateTime.Now.Subtract(_tmrWfs);
-            if (DateTime.Now.Subtract(_lastUpdateRateRenderTime).TotalMilliseconds > 200 && updateRates.Any())
+        {
+            int _msElapsed = (int)_swWfs.ElapsedMilliseconds;
+            _swWfs.Restart();            
+            if (DateTime.Now.Subtract(_lastUpdateRateRenderTime).TotalMilliseconds > 1000 && updateRates.Any())
             {
                 lblWaveformsSecond.Text = updateRates.Average().ToString("F0") + "Hz";
+                lblDataRate.Text = dataRates.Average().ToString("F0") + "Hz";
                 updateRates.Clear();
+                dataRates.Clear();
                 _lastUpdateRateRenderTime = DateTime.Now;
             }
             else
             {
-                updateRates.Add(1000 / timeDiff.TotalMilliseconds);
-            }
-            _tmrWfs = DateTime.Now;
+                updateRates.Add(1000.0 / _msElapsed);
+                dataRates.Add(1000.0 / _analyzer.DataReceiveInterval);
+            }            
         }
 
 
-        DateTime lastStatsRenderTime = DateTime.Now;
+        DateTime _lastStatsRenderTime = DateTime.Now;
         /// <summary>
         /// Render the statistics
         /// </summary>
@@ -817,7 +858,7 @@ namespace SignalAnalyzerApplication
         private void RenderScopeStats(ScopeData data)
         {
             // Show statistics data twice a second
-            if (DateTime.Now.Subtract(lastStatsRenderTime).TotalMilliseconds > 500)
+            if (DateTime.Now.Subtract(_lastStatsRenderTime).TotalMilliseconds > 500)
             {
                 if (data != null && data.Triggered || _analyzer.TriggerMode == TriggerModes.Auto || _analyzer.TriggerMode == TriggerModes.Off)
                 {
@@ -856,35 +897,60 @@ namespace SignalAnalyzerApplication
                     lblNumberOfAverages.Text = data.Statistics.AvgCount.ToString();
                     lblDCOffset.Text = "?";
                 }
-                lastStatsRenderTime = DateTime.Now;
+                _lastStatsRenderTime = DateTime.Now;
             }
         }
 
 
+        
         void signalAnalyzer_RenderFFT(object sender, FFTEventArgs e)
-        {
-            RenderFFTData(e.FFTData);            
+        {                        
+            RenderFFTData(e.FFTData);                            
         }
 
-        
 
+        DateTime _lastMinMaxFFTRenderTime = DateTime.Now;
         void RenderFFTData(FFTData data)
         {           
             try
             {
+                if (_analyzer.AcquireState == AcquireStates.Stopped)
+                    return;
                 lock (lck)
                 {
                     _fftData = data;
                 }
-                spectrum.Series.RemoveAt(0);
-                spectrum.Series.Add("Series1");
-                spectrum.Series["Series1"].ChartArea = "ChartArea1";
-                spectrum.Series["Series1"].ChartType = SeriesChartType.Line;
-                spectrum.Series["Series1"].MarkerSize = 1;                    
 
+                bool renderMinMax = false;
+                if (DateTime.Now.Subtract(_lastMinMaxFFTRenderTime).TotalMilliseconds > 200) // Only draw min.max trace 5 times a second
+                {
+                    renderMinMax = true;
+                    _lastMinMaxFFTRenderTime = DateTime.Now;
+                }                
+
+                if (renderMinMax || !chkFFTDrawMaxTrace.Checked)
+                {
+                    // Remove all, add series 1                 
+                    while (spectrum.Series.Count > 0)
+                        spectrum.Series.RemoveAt(0);
+                    spectrum.Series.Add("Series1");
+                }
+                else
+                {
+                    // Only remove and add series 1
+                    spectrum.Series.RemoveAt(0);
+                    Series series = new Series("Series1");
+                    spectrum.Series.Insert(0, series);
+                }
+                                
+                spectrum.Series["Series1"].ChartArea = "ChartArea1";
+                spectrum.Series["Series1"].ChartType = SeriesChartType.FastLine;
+                spectrum.Series["Series1"].MarkerSize = 1;
+
+                double[] xPoints = null;
+                double[] yPoints = null;
                 if (data != null)
                 {
-                    double[] yPoints = null;
                     if (rbFFTViewUncalibrated.Checked)
                         yPoints = rbDbm.Checked ? data.FreqDomain : data.Vrms;
                     else if (rbFFTViewCalibrated.Checked)
@@ -911,15 +977,65 @@ namespace SignalAnalyzerApplication
                     else if (rbFFTViewSaved.Checked)
                         yPoints = rbDbm.Checked ? _calibrationDataFreqDomain : _calibrationDataVrms;
 
-                    double[] xPoints = Enumerable.Range(0, yPoints.Count()).Select(s => s * (double)data.SamplesPerSecond / data.FreqDomain.Length / 2).ToArray();
+                    xPoints = Enumerable.Range(0, yPoints.Count()).Select(s => s * (double)data.SamplesPerSecond / data.FreqDomain.Length / 2).ToArray();
                                         
-                    spectrum.ChartAreas["ChartArea1"].CursorX.Interval = data.SamplesPerSecond / (double)data.FreqDomain.Length / 2.0;        //matches cursor step size to X axis step size
-                    spectrum.Series["Series1"].Points.DataBindXY(xPoints, yPoints);                        
+                    spectrum.ChartAreas["ChartArea1"].CursorX.Interval = data.SamplesPerSecond / (double)data.FreqDomain.Length / 2.0;        //matches cursor step size to X axis step size                                       
                 }                    
+                
+                // Code below currently under test.
+                double[] xPointsMax = null;
+                double[] yPointsMax = null;
+                if (chkFFTDrawMaxTrace.Checked && renderMinMax)
+                {
+                    spectrum.Series.Add("Series2");
+                    spectrum.Series["Series2"].ChartArea = "ChartArea1";
+                    spectrum.Series["Series2"].ChartType = SeriesChartType.FastLine;
+                    spectrum.Series["Series2"].MarkerSize = 1;
+                    spectrum.Series["Series2"].Color = Color.Orange;
+                    
+                    if (rbFFTViewUncalibrated.Checked)
+                        yPointsMax = rbDbm.Checked ? data.Statistics.MaxTraceFFT : data.Statistics.MaxTraceRMS;
+                    else if (rbFFTViewCalibrated.Checked)
+                    {
+                        var calData = rbDbm.Checked ? _calibrationDataFreqDomain : _calibrationDataVrms;
+                        var curData = rbDbm.Checked ? data.Statistics.MaxTraceFFT : data.Statistics.MaxTraceRMS;
+                        int cnt = curData.Length < calData.Length ? curData.Length : calData.Length; // Take shortest
+                        yPointsMax = new double[cnt];
+                        if (rbDbm.Checked)
+                        { 
+                            for (int i = 0; i < cnt; i++)                            
+                                yPointsMax[i] = Math.Abs(calData[i]) + curData[i]; // reference - current spectrum                            
+                        }
+                        else
+                        {
+                            for (int i = 0; i < cnt; i++)                           
+                                yPointsMax[i] = curData[i] - calData[i];                            
+                        }
+                    }
+                    if (yPointsMax != null)
+                    {
+                        xPointsMax = Enumerable.Range(0, yPointsMax.Count()).Select(s => s * (double)data.SamplesPerSecond / data.FreqDomain.Length / 2).ToArray();
+                        spectrum.ChartAreas["ChartArea1"].CursorX.Interval = data.SamplesPerSecond / (double)data.FreqDomain.Length / 2.0;        //matches cursor step size to X axis step size                                       
+                    }
+                }
+
+                // Render points
+                for (int i = 0; i < xPoints.Length; i++)
+                {
+                    spectrum.Series["Series1"].Points.AddXY(xPoints[i], yPoints[i]);
+                    if (xPointsMax != null && yPointsMax != null)
+                        spectrum.Series["Series2"].Points.AddXY(xPointsMax[i], yPointsMax[i]);
+                }
+                spectrum.Series.ResumeUpdates();
+                spectrum.Series.Invalidate();
+                spectrum.Series.SuspendUpdates();
+
                 RenderFftStats(data);
             }
             catch (Exception) { }            
         }
+
+        
 
 
 
@@ -1048,7 +1164,6 @@ namespace SignalAnalyzerApplication
             cmbIPAddresses.Items.Clear();            
             if (devices.Any())
             {                                                
-                //cmbIPAddresses.DataSource = new BindingSource(devices.Select(d => new ComboboxItem { Text = d.IPAddress.ToString(), Value = d.IPAddress.ToString() }).ToList(), null);                
                 foreach (string address in devices.Select(d => d.IPAddress.ToString()))                
                     cmbIPAddresses.Items.Add(address);
                 
@@ -1152,6 +1267,11 @@ namespace SignalAnalyzerApplication
             cmbGeneratorWaveform.SelectedIndex = 3;
             udFFTAverages.Value = 25;
             MessageBox.Show("White noise generator has been enabled and FFT set to 25 averages.");
+        }
+
+        private void chkFFTDrawMaxTrace_CheckedChanged(object sender, EventArgs e)
+        {
+            FFTData.ResetMaxTrace();
         }
     }
     

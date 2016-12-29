@@ -17,10 +17,13 @@ namespace Elektor.SignalAnalyzer
         private static AcquireStates _acquireState = AcquireStates.Stopped;
 
         private static readonly object stateLock = new object();    // Locking object
+        private static readonly object timeLock = new object();    // Locking object
         private BackgroundWorker _worker;                           // Background worker (does not mean it runs at lower priority)
         private static ClientConnection _connection;                // Connection object
         private ScopeDataAnalyzer _scopeDataAnalyzer;               // Scope data analyzer object
         private Stopwatch _triggerTimeout;                          // Used in Auto mode
+        private Stopwatch _dataReceiveTimer;                          // Time the data rate
+        private int _dataReceiveInterval;                                  // Receive interval
         private bool _triggeredLastTime;                            // Used in Normal mode
         private bool _settingsChanged;                      // Indicate new settings have to be set
         private AutoResetEvent _resetEvent = new AutoResetEvent(false);
@@ -63,6 +66,7 @@ namespace Elektor.SignalAnalyzer
             CreateWorker();
 
             _triggerTimeout = new Stopwatch();
+            _dataReceiveTimer = new Stopwatch();            
         }
 
         private void CreateWorker()
@@ -457,6 +461,20 @@ namespace Elektor.SignalAnalyzer
                     _scopeDataAnalyzer.Coupling = value;
             }
         }
+
+
+        /// <summary>
+        ///  Data receive time
+        /// </summary>
+        public int DataReceiveInterval
+        {
+            get
+            {
+                lock (timeLock)
+                    return _dataReceiveInterval;
+            }            
+        }
+
         #endregion
 
         #region Private Methods
@@ -482,9 +500,12 @@ namespace Elektor.SignalAnalyzer
                     rxBuff = new byte[_sampleCount*2];
                 byte[] txBuff = new byte[128];
 
-                _triggerTimeout.Reset();
+                _triggerTimeout.Reset();                
                 if (!_triggerTimeout.IsRunning)
                     _triggerTimeout.Start();
+                _dataReceiveTimer.Reset();
+                if (!_dataReceiveTimer.IsRunning)
+                    _dataReceiveTimer.Start();
 
                 while (!worker.CancellationPending)
                 {
@@ -594,6 +615,10 @@ namespace Elektor.SignalAnalyzer
                         if (_acquireState == AcquireStates.Stopped || _acquireState == AcquireStates.Immediate)
                             return;                        
                     }
+
+                    lock (timeLock)
+                        _dataReceiveInterval =  (int)_dataReceiveTimer.ElapsedMilliseconds;
+                    _dataReceiveTimer.Restart();
                 }
             }
             catch (Exception ex)

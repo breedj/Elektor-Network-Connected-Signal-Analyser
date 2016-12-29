@@ -226,6 +226,18 @@ namespace Elektor.SignalAnalyzer
             }
         }
 
+        /// <summary>
+        ///  Data receive time in ms
+        /// </summary>
+        public int DataReceiveInterval
+        {
+            get
+            {                
+                return _sampleCollector.DataReceiveInterval;
+            }
+        }
+
+
         public WindowingTypes WindowType { get; set; } = WindowingTypes.Square;
 
         public int FftAverages { get; set; } = 1;

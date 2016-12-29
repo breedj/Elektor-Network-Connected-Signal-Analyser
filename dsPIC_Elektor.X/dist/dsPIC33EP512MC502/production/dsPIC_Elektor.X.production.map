@@ -164,12 +164,12 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200              0x161a          0x2127  (8487)
 .const                      0x181a               0x188           0x24c  (588)
-.text                       0x19a2              0x3b60          0x5910  (22800)
-.dinit                      0x5502               0x14a           0x1ef  (495)
-.text                       0x564c               0x12a           0x1bf  (447)
-.shared.dinit               0x5776                 0x2             0x3  (3)
+.text                       0x19a2              0x3b5c          0x590a  (22794)
+.dinit                      0x54fe               0x14a           0x1ef  (495)
+.text                       0x5648               0x12a           0x1bf  (447)
+.shared.dinit               0x5772                 0x2             0x3  (3)
 
-                 Total program memory used (bytes):         0x8034  (32820) 6%
+                 Total program memory used (bytes):         0x802e  (32814) 6%
 
 
 Ivt Memory  [Origin = 0x4, Length = 0x1fc]
@@ -201,7 +201,7 @@ section                    address      alignment gaps    total length  (dec)
 .data                       0x1f0e                   0            0x2a  (42)
 .bss                        0x1f38                   0            0x14  (20)
 .data                       0x1f4c                   0             0x4  (4)
-_03F5AF605858536f           0x2bf0                   0          0xa410  (42000)
+_03EC8F605860e340           0x2bf0                   0          0xa410  (42000)
 
                  Total data memory used (bytes):         0xb360  (45920) 93%
 
@@ -447,89 +447,89 @@ External Symbols in Program Memory (by address):
                   0x003bea                  _getsockopt
                   0x003d88                  _main
                   0x003f3e                  _CommandPoll
-                  0x004396                  _wizchip_select
-                  0x00439e                  _wizchip_deselect
-                  0x0043a6                  _wizchip_write
-                  0x0043c2                  _wizchip_read
-                  0x0043d8                  _network_init
-                  0x0044c8                  _tcps
-                  0x0045e0                  _platform_init
-                  0x004660                  _InitSPI2
-                  0x004682                  _ConfigureOscillator
-                  0x0046d8                  __T1Interrupt
-                  0x004728                  _SetTmr5
-                  0x004748                  __T5Interrupt
-                  0x004782                  _my_ip_assign
-                  0x0047aa                  _my_ip_conflict
-                  0x0047b2                  _wizchip_cris_enter
-                  0x0047b8                  _wizchip_cris_exit
-                  0x0047be                  _wizchip_cs_select
-                  0x0047c4                  _wizchip_cs_deselect
-                  0x0047ca                  _wizchip_bus_readbyte
-                  0x0047e2                  _wizchip_bus_writebyte
-                  0x0047fe                  _wizchip_spi_readbyte
-                  0x004806                  _wizchip_spi_writebyte
-                  0x00480e                  _reg_wizchip_cris_cbfunc
-                  0x004836                  _reg_wizchip_cs_cbfunc
-                  0x00485e                  _reg_wizchip_bus_cbfunc
-                  0x004892                  _reg_wizchip_spi_cbfunc
-                  0x0048c6                  _ctlwizchip
-                  0x004a08                  _ctlnetwork
-                  0x004a66                  _wizchip_sw_reset
-                  0x004ad2                  _wizchip_init
-                  0x004b98                  _wizchip_clrinterrupt
-                  0x004bbe                  _wizchip_getinterrupt
-                  0x004bf4                  _wizchip_setinterruptmask
-                  0x004c16                  _wizchip_getinterruptmask
-                  0x004c4a                  _wizphy_getphylink
-                  0x004c6c                  _wizphy_getphypmode
-                  0x004c92                  _wizphy_reset
-                  0x004cbe                  _wizphy_setphyconf
-                  0x004d18                  _wizphy_getphyconf
-                  0x004daa                  _wizphy_getphystat
-                  0x004dde                  _wizphy_setphypmode
-                  0x004e4a                  _wizchip_setnetinfo
-                  0x004eae                  _wizchip_getnetinfo
-                  0x004f12                  _wizchip_setnetmode
-                  0x004f40                  _wizchip_getnetmode
-                  0x004f4c                  _wizchip_settimeout
-                  0x004f7e                  _wizchip_gettimeout
-                  0x004fae                  _WIZCHIP_READ
-                  0x005034                  _WIZCHIP_WRITE
-                  0x0050b6                  _WIZCHIP_READ_BUF
-                  0x005162                  _WIZCHIP_WRITE_BUF
-                  0x005214                  _getSn_TX_FSR
-                  0x00529a                  _getSn_RX_RSR
-                  0x005320                  _wiz_send_data
-                  0x0053d8                  _wiz_recv_data
-                  0x005490                  _wiz_recv_ignore
-                  0x00564c                  _SetAdc1
-                  0x0056cc                  _SetTmr3
-                  0x0056e2                  _SetTmr1
-                  0x0056f8                  __AD1Interrupt
-                  0x00573e                  _Delay
-                  0x00575a                  _Delay_Us
+                  0x004392                  _wizchip_select
+                  0x00439a                  _wizchip_deselect
+                  0x0043a2                  _wizchip_write
+                  0x0043be                  _wizchip_read
+                  0x0043d4                  _network_init
+                  0x0044c4                  _tcps
+                  0x0045dc                  _platform_init
+                  0x00465c                  _InitSPI2
+                  0x00467e                  _ConfigureOscillator
+                  0x0046d4                  __T1Interrupt
+                  0x004724                  _SetTmr5
+                  0x004744                  __T5Interrupt
+                  0x00477e                  _my_ip_assign
+                  0x0047a6                  _my_ip_conflict
+                  0x0047ae                  _wizchip_cris_enter
+                  0x0047b4                  _wizchip_cris_exit
+                  0x0047ba                  _wizchip_cs_select
+                  0x0047c0                  _wizchip_cs_deselect
+                  0x0047c6                  _wizchip_bus_readbyte
+                  0x0047de                  _wizchip_bus_writebyte
+                  0x0047fa                  _wizchip_spi_readbyte
+                  0x004802                  _wizchip_spi_writebyte
+                  0x00480a                  _reg_wizchip_cris_cbfunc
+                  0x004832                  _reg_wizchip_cs_cbfunc
+                  0x00485a                  _reg_wizchip_bus_cbfunc
+                  0x00488e                  _reg_wizchip_spi_cbfunc
+                  0x0048c2                  _ctlwizchip
+                  0x004a04                  _ctlnetwork
+                  0x004a62                  _wizchip_sw_reset
+                  0x004ace                  _wizchip_init
+                  0x004b94                  _wizchip_clrinterrupt
+                  0x004bba                  _wizchip_getinterrupt
+                  0x004bf0                  _wizchip_setinterruptmask
+                  0x004c12                  _wizchip_getinterruptmask
+                  0x004c46                  _wizphy_getphylink
+                  0x004c68                  _wizphy_getphypmode
+                  0x004c8e                  _wizphy_reset
+                  0x004cba                  _wizphy_setphyconf
+                  0x004d14                  _wizphy_getphyconf
+                  0x004da6                  _wizphy_getphystat
+                  0x004dda                  _wizphy_setphypmode
+                  0x004e46                  _wizchip_setnetinfo
+                  0x004eaa                  _wizchip_getnetinfo
+                  0x004f0e                  _wizchip_setnetmode
+                  0x004f3c                  _wizchip_getnetmode
+                  0x004f48                  _wizchip_settimeout
+                  0x004f7a                  _wizchip_gettimeout
+                  0x004faa                  _WIZCHIP_READ
+                  0x005030                  _WIZCHIP_WRITE
+                  0x0050b2                  _WIZCHIP_READ_BUF
+                  0x00515e                  _WIZCHIP_WRITE_BUF
+                  0x005210                  _getSn_TX_FSR
+                  0x005296                  _getSn_RX_RSR
+                  0x00531c                  _wiz_send_data
+                  0x0053d4                  _wiz_recv_data
+                  0x00548c                  _wiz_recv_ignore
+                  0x005648                  _SetAdc1
+                  0x0056c8                  _SetTmr3
+                  0x0056de                  _SetTmr1
+                  0x0056f4                  __AD1Interrupt
+                  0x00573a                  _Delay
+                  0x005756                  _Delay_Us
 
 External Symbols in Program Memory (by name):
 
                   0x003f3e                  _CommandPoll
-                  0x004682                  _ConfigureOscillator
+                  0x00467e                  _ConfigureOscillator
                   0x002b4e                  _DHCP_init
                   0x002884                  _DHCP_run
                   0x002a4a                  _DHCP_stop
                   0x002c0c                  _DHCP_time_handler
-                  0x00573e                  _Delay
-                  0x00575a                  _Delay_Us
-                  0x004660                  _InitSPI2
-                  0x00564c                  _SetAdc1
-                  0x0056e2                  _SetTmr1
-                  0x0056cc                  _SetTmr3
-                  0x004728                  _SetTmr5
-                  0x004fae                  _WIZCHIP_READ
-                  0x0050b6                  _WIZCHIP_READ_BUF
-                  0x005034                  _WIZCHIP_WRITE
-                  0x005162                  _WIZCHIP_WRITE_BUF
-                  0x0056f8                  __AD1Interrupt
+                  0x00573a                  _Delay
+                  0x005756                  _Delay_Us
+                  0x00465c                  _InitSPI2
+                  0x005648                  _SetAdc1
+                  0x0056de                  _SetTmr1
+                  0x0056c8                  _SetTmr3
+                  0x004724                  _SetTmr5
+                  0x004faa                  _WIZCHIP_READ
+                  0x0050b2                  _WIZCHIP_READ_BUF
+                  0x005030                  _WIZCHIP_WRITE
+                  0x00515e                  _WIZCHIP_WRITE_BUF
+                  0x0056f4                  __AD1Interrupt
                   0x00032a                  __AddressError
                   0x00033c                  __DMACError
                   0x000342                  __DefaultInterrupt
@@ -538,8 +538,8 @@ External Symbols in Program Memory (by name):
                   0x000324                  __OscillatorFail
                   0x00034a                  __SoftTrapError
                   0x000330                  __StackError
-                  0x0046d8                  __T1Interrupt
-                  0x004748                  __T5Interrupt
+                  0x0046d4                  __T1Interrupt
+                  0x004744                  __T5Interrupt
                   0x0003aa                  ___adddf3
                   0x0004a6                  ___addsf3
                   0x000560                  ___divdf3
@@ -600,9 +600,9 @@ External Symbols in Program Memory (by name):
                   0x002a5c                  _check_DHCP_timeout
                   0x002e3c                  _close
                   0x002f58                  _connect
-                  0x004a08                  _ctlnetwork
+                  0x004a04                  _ctlnetwork
                   0x003910                  _ctlsocket
-                  0x0048c6                  _ctlwizchip
+                  0x0048c2                  _ctlwizchip
                   0x0019a2                  _default_ip_assign
                   0x0019e2                  _default_ip_conflict
                   0x0019c6                  _default_ip_update
@@ -614,26 +614,26 @@ External Symbols in Program Memory (by name):
                   0x002c48                  _getGWfromDHCP
                   0x002c1e                  _getIPfromDHCP
                   0x002c72                  _getSNfromDHCP
-                  0x00529a                  _getSn_RX_RSR
-                  0x005214                  _getSn_TX_FSR
+                  0x005296                  _getSn_RX_RSR
+                  0x005210                  _getSn_TX_FSR
                   0x003bea                  _getsockopt
                   0x002ec4                  _listen
                   0x003d88                  _main
                   0x001a32                  _makeDHCPMSG
-                  0x004782                  _my_ip_assign
-                  0x0047aa                  _my_ip_conflict
-                  0x0043d8                  _network_init
+                  0x00477e                  _my_ip_assign
+                  0x0047a6                  _my_ip_conflict
+                  0x0043d4                  _network_init
                   0x00261e                  _parseDHCPMSG
-                  0x0045e0                  _platform_init
+                  0x0045dc                  _platform_init
                   0x000d5e                  _puts
                   0x000d80                  _rand
                   0x0032b2                  _recv
                   0x0035cc                  _recvfrom
                   0x0019fc                  _reg_dhcp_cbfunc
-                  0x00485e                  _reg_wizchip_bus_cbfunc
-                  0x00480e                  _reg_wizchip_cris_cbfunc
-                  0x004836                  _reg_wizchip_cs_cbfunc
-                  0x004892                  _reg_wizchip_spi_cbfunc
+                  0x00485a                  _reg_wizchip_bus_cbfunc
+                  0x00480a                  _reg_wizchip_cris_cbfunc
+                  0x004832                  _reg_wizchip_cs_cbfunc
+                  0x00488e                  _reg_wizchip_spi_cbfunc
                   0x002bf2                  _reset_DHCP_timeout
                   0x00311e                  _send
                   0x002378                  _send_DHCP_DECLINE
@@ -644,41 +644,41 @@ External Symbols in Program Memory (by name):
                   0x0009ca                  _sinf
                   0x002cd0                  _socket
                   0x000d72                  _srand
-                  0x0044c8                  _tcps
-                  0x0053d8                  _wiz_recv_data
-                  0x005490                  _wiz_recv_ignore
-                  0x005320                  _wiz_send_data
-                  0x0047ca                  _wizchip_bus_readbyte
-                  0x0047e2                  _wizchip_bus_writebyte
-                  0x004b98                  _wizchip_clrinterrupt
-                  0x0047b2                  _wizchip_cris_enter
-                  0x0047b8                  _wizchip_cris_exit
-                  0x0047c4                  _wizchip_cs_deselect
-                  0x0047be                  _wizchip_cs_select
-                  0x00439e                  _wizchip_deselect
-                  0x004bbe                  _wizchip_getinterrupt
-                  0x004c16                  _wizchip_getinterruptmask
-                  0x004eae                  _wizchip_getnetinfo
-                  0x004f40                  _wizchip_getnetmode
-                  0x004f7e                  _wizchip_gettimeout
-                  0x004ad2                  _wizchip_init
-                  0x0043c2                  _wizchip_read
-                  0x004396                  _wizchip_select
-                  0x004bf4                  _wizchip_setinterruptmask
-                  0x004e4a                  _wizchip_setnetinfo
-                  0x004f12                  _wizchip_setnetmode
-                  0x004f4c                  _wizchip_settimeout
-                  0x0047fe                  _wizchip_spi_readbyte
-                  0x004806                  _wizchip_spi_writebyte
-                  0x004a66                  _wizchip_sw_reset
-                  0x0043a6                  _wizchip_write
-                  0x004d18                  _wizphy_getphyconf
-                  0x004c4a                  _wizphy_getphylink
-                  0x004c6c                  _wizphy_getphypmode
-                  0x004daa                  _wizphy_getphystat
-                  0x004c92                  _wizphy_reset
-                  0x004cbe                  _wizphy_setphyconf
-                  0x004dde                  _wizphy_setphypmode
+                  0x0044c4                  _tcps
+                  0x0053d4                  _wiz_recv_data
+                  0x00548c                  _wiz_recv_ignore
+                  0x00531c                  _wiz_send_data
+                  0x0047c6                  _wizchip_bus_readbyte
+                  0x0047de                  _wizchip_bus_writebyte
+                  0x004b94                  _wizchip_clrinterrupt
+                  0x0047ae                  _wizchip_cris_enter
+                  0x0047b4                  _wizchip_cris_exit
+                  0x0047c0                  _wizchip_cs_deselect
+                  0x0047ba                  _wizchip_cs_select
+                  0x00439a                  _wizchip_deselect
+                  0x004bba                  _wizchip_getinterrupt
+                  0x004c12                  _wizchip_getinterruptmask
+                  0x004eaa                  _wizchip_getnetinfo
+                  0x004f3c                  _wizchip_getnetmode
+                  0x004f7a                  _wizchip_gettimeout
+                  0x004ace                  _wizchip_init
+                  0x0043be                  _wizchip_read
+                  0x004392                  _wizchip_select
+                  0x004bf0                  _wizchip_setinterruptmask
+                  0x004e46                  _wizchip_setnetinfo
+                  0x004f0e                  _wizchip_setnetmode
+                  0x004f48                  _wizchip_settimeout
+                  0x0047fa                  _wizchip_spi_readbyte
+                  0x004802                  _wizchip_spi_writebyte
+                  0x004a62                  _wizchip_sw_reset
+                  0x0043a2                  _wizchip_write
+                  0x004d14                  _wizphy_getphyconf
+                  0x004c46                  _wizphy_getphylink
+                  0x004c68                  _wizphy_getphypmode
+                  0x004da6                  _wizphy_getphystat
+                  0x004c8e                  _wizphy_reset
+                  0x004cba                  _wizphy_setphyconf
+                  0x004dda                  _wizphy_setphypmode
 
 Memory Configuration
 
@@ -971,17 +971,17 @@ __FUID3
  .debug_abbrev    0x00063f        0x22b build/dsPIC33EP512MC502/production/wizchip_conf.o
  .debug_abbrev    0x00086a        0x141 build/dsPIC33EP512MC502/production/dhcp.o
 
-.debug_line       0x000000        0xcf8
+.debug_line       0x000000        0xcf6
  *(.debug_line)
  .debug_line      0x000000         0x1a build/dsPIC33EP512MC502/production/interrupts.o
- .debug_line      0x00001a        0x292 build/dsPIC33EP512MC502/production/main.o
- .debug_line      0x0002ac         0xab build/dsPIC33EP512MC502/production/traps.o
- .debug_line      0x000357         0xcc build/dsPIC33EP512MC502/production/user.o
- .debug_line      0x000423         0x47 build/dsPIC33EP512MC502/production/delay.o
- .debug_line      0x00046a        0x284 build/dsPIC33EP512MC502/production/socket.o
- .debug_line      0x0006ee        0x125 build/dsPIC33EP512MC502/production/w5500.o
- .debug_line      0x000813        0x1e3 build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_line      0x0009f6        0x302 build/dsPIC33EP512MC502/production/dhcp.o
+ .debug_line      0x00001a        0x290 build/dsPIC33EP512MC502/production/main.o
+ .debug_line      0x0002aa         0xab build/dsPIC33EP512MC502/production/traps.o
+ .debug_line      0x000355         0xcc build/dsPIC33EP512MC502/production/user.o
+ .debug_line      0x000421         0x47 build/dsPIC33EP512MC502/production/delay.o
+ .debug_line      0x000468        0x284 build/dsPIC33EP512MC502/production/socket.o
+ .debug_line      0x0006ec        0x125 build/dsPIC33EP512MC502/production/w5500.o
+ .debug_line      0x000811        0x1e3 build/dsPIC33EP512MC502/production/wizchip_conf.o
+ .debug_line      0x0009f4        0x302 build/dsPIC33EP512MC502/production/dhcp.o
 
 .debug_frame      0x000000        0xd04
  *(.debug_frame)
@@ -2585,9 +2585,9 @@ __c30_signature
  .data              0x1f4e          0x2 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(c30_uartep.eo)
                     0x1f4e                  ___C30_UART
 
-_03F5AF605858536f
+_03EC8F605860e340
                     0x2bf0       0xa410
- _03F5AF605858536f
+ _03EC8F605860e340
                     0x2bf0       0xa410 build/dsPIC33EP512MC502/production/main.o
                     0x2bf0                  _MainBuffer
 
@@ -2645,7 +2645,7 @@ _03F5AF605858536f
  .const             0x981a        0x176 build/dsPIC33EP512MC502/production/main.o
  .const             0x9990         0x12 build/dsPIC33EP512MC502/production/dhcp.o
 
-.text             0x0019a2       0x3b60
+.text             0x0019a2       0x3b5c
  .text            0x0019a2       0x132e build/dsPIC33EP512MC502/production/dhcp.o
                   0x0019a2                  _default_ip_assign
                   0x0019c6                  _default_ip_update
@@ -2681,80 +2681,80 @@ _03F5AF605858536f
                   0x003910                  _ctlsocket
                   0x003a58                  _setsockopt
                   0x003bea                  _getsockopt
- .text            0x003d88        0xa2a build/dsPIC33EP512MC502/production/main.o
+ .text            0x003d88        0xa26 build/dsPIC33EP512MC502/production/main.o
                   0x003d88                  _main
                   0x003f3e                  _CommandPoll
-                  0x004396                  _wizchip_select
-                  0x00439e                  _wizchip_deselect
-                  0x0043a6                  _wizchip_write
-                  0x0043c2                  _wizchip_read
-                  0x0043d8                  _network_init
-                  0x0044c8                  _tcps
-                  0x0045e0                  _platform_init
-                  0x004660                  _InitSPI2
-                  0x004682                  _ConfigureOscillator
-                  0x0046d8                  __T1Interrupt
-                  0x004728                  _SetTmr5
-                  0x004748                  __T5Interrupt
-                  0x004782                  _my_ip_assign
-                  0x0047aa                  _my_ip_conflict
- .text            0x0047b2        0x7fc build/dsPIC33EP512MC502/production/wizchip_conf.o
-                  0x0047b2                  _wizchip_cris_enter
-                  0x0047b8                  _wizchip_cris_exit
-                  0x0047be                  _wizchip_cs_select
-                  0x0047c4                  _wizchip_cs_deselect
-                  0x0047ca                  _wizchip_bus_readbyte
-                  0x0047e2                  _wizchip_bus_writebyte
-                  0x0047fe                  _wizchip_spi_readbyte
-                  0x004806                  _wizchip_spi_writebyte
-                  0x00480e                  _reg_wizchip_cris_cbfunc
-                  0x004836                  _reg_wizchip_cs_cbfunc
-                  0x00485e                  _reg_wizchip_bus_cbfunc
-                  0x004892                  _reg_wizchip_spi_cbfunc
-                  0x0048c6                  _ctlwizchip
-                  0x004a08                  _ctlnetwork
-                  0x004a66                  _wizchip_sw_reset
-                  0x004ad2                  _wizchip_init
-                  0x004b98                  _wizchip_clrinterrupt
-                  0x004bbe                  _wizchip_getinterrupt
-                  0x004bf4                  _wizchip_setinterruptmask
-                  0x004c16                  _wizchip_getinterruptmask
-                  0x004c4a                  _wizphy_getphylink
-                  0x004c6c                  _wizphy_getphypmode
-                  0x004c92                  _wizphy_reset
-                  0x004cbe                  _wizphy_setphyconf
-                  0x004d18                  _wizphy_getphyconf
-                  0x004daa                  _wizphy_getphystat
-                  0x004dde                  _wizphy_setphypmode
-                  0x004e4a                  _wizchip_setnetinfo
-                  0x004eae                  _wizchip_getnetinfo
-                  0x004f12                  _wizchip_setnetmode
-                  0x004f40                  _wizchip_getnetmode
-                  0x004f4c                  _wizchip_settimeout
-                  0x004f7e                  _wizchip_gettimeout
- .text            0x004fae        0x554 build/dsPIC33EP512MC502/production/w5500.o
-                  0x004fae                  _WIZCHIP_READ
-                  0x005034                  _WIZCHIP_WRITE
-                  0x0050b6                  _WIZCHIP_READ_BUF
-                  0x005162                  _WIZCHIP_WRITE_BUF
-                  0x005214                  _getSn_TX_FSR
-                  0x00529a                  _getSn_RX_RSR
-                  0x005320                  _wiz_send_data
-                  0x0053d8                  _wiz_recv_data
-                  0x005490                  _wiz_recv_ignore
+                  0x004392                  _wizchip_select
+                  0x00439a                  _wizchip_deselect
+                  0x0043a2                  _wizchip_write
+                  0x0043be                  _wizchip_read
+                  0x0043d4                  _network_init
+                  0x0044c4                  _tcps
+                  0x0045dc                  _platform_init
+                  0x00465c                  _InitSPI2
+                  0x00467e                  _ConfigureOscillator
+                  0x0046d4                  __T1Interrupt
+                  0x004724                  _SetTmr5
+                  0x004744                  __T5Interrupt
+                  0x00477e                  _my_ip_assign
+                  0x0047a6                  _my_ip_conflict
+ .text            0x0047ae        0x7fc build/dsPIC33EP512MC502/production/wizchip_conf.o
+                  0x0047ae                  _wizchip_cris_enter
+                  0x0047b4                  _wizchip_cris_exit
+                  0x0047ba                  _wizchip_cs_select
+                  0x0047c0                  _wizchip_cs_deselect
+                  0x0047c6                  _wizchip_bus_readbyte
+                  0x0047de                  _wizchip_bus_writebyte
+                  0x0047fa                  _wizchip_spi_readbyte
+                  0x004802                  _wizchip_spi_writebyte
+                  0x00480a                  _reg_wizchip_cris_cbfunc
+                  0x004832                  _reg_wizchip_cs_cbfunc
+                  0x00485a                  _reg_wizchip_bus_cbfunc
+                  0x00488e                  _reg_wizchip_spi_cbfunc
+                  0x0048c2                  _ctlwizchip
+                  0x004a04                  _ctlnetwork
+                  0x004a62                  _wizchip_sw_reset
+                  0x004ace                  _wizchip_init
+                  0x004b94                  _wizchip_clrinterrupt
+                  0x004bba                  _wizchip_getinterrupt
+                  0x004bf0                  _wizchip_setinterruptmask
+                  0x004c12                  _wizchip_getinterruptmask
+                  0x004c46                  _wizphy_getphylink
+                  0x004c68                  _wizphy_getphypmode
+                  0x004c8e                  _wizphy_reset
+                  0x004cba                  _wizphy_setphyconf
+                  0x004d14                  _wizphy_getphyconf
+                  0x004da6                  _wizphy_getphystat
+                  0x004dda                  _wizphy_setphypmode
+                  0x004e46                  _wizchip_setnetinfo
+                  0x004eaa                  _wizchip_getnetinfo
+                  0x004f0e                  _wizchip_setnetmode
+                  0x004f3c                  _wizchip_getnetmode
+                  0x004f48                  _wizchip_settimeout
+                  0x004f7a                  _wizchip_gettimeout
+ .text            0x004faa        0x554 build/dsPIC33EP512MC502/production/w5500.o
+                  0x004faa                  _WIZCHIP_READ
+                  0x005030                  _WIZCHIP_WRITE
+                  0x0050b2                  _WIZCHIP_READ_BUF
+                  0x00515e                  _WIZCHIP_WRITE_BUF
+                  0x005210                  _getSn_TX_FSR
+                  0x005296                  _getSn_RX_RSR
+                  0x00531c                  _wiz_send_data
+                  0x0053d4                  _wiz_recv_data
+                  0x00548c                  _wiz_recv_ignore
 
-.dinit            0x005502        0x14a
- .dinit           0x005502        0x14a data_init
+.dinit            0x0054fe        0x14a
+ .dinit           0x0054fe        0x14a data_init
 
-.text             0x00564c        0x12a
- .text            0x00564c         0xf2 build/dsPIC33EP512MC502/production/user.o
-                  0x00564c                  _SetAdc1
-                  0x0056cc                  _SetTmr3
-                  0x0056e2                  _SetTmr1
-                  0x0056f8                  __AD1Interrupt
- .text            0x00573e         0x38 build/dsPIC33EP512MC502/production/delay.o
-                  0x00573e                  _Delay
-                  0x00575a                  _Delay_Us
+.text             0x005648        0x12a
+ .text            0x005648         0xf2 build/dsPIC33EP512MC502/production/user.o
+                  0x005648                  _SetAdc1
+                  0x0056c8                  _SetTmr3
+                  0x0056de                  _SetTmr1
+                  0x0056f4                  __AD1Interrupt
+ .text            0x00573a         0x38 build/dsPIC33EP512MC502/production/delay.o
+                  0x00573a                  _Delay
+                  0x005756                  _Delay_Us
 
-.shared.dinit     0x005776          0x2
- .shared.dinit    0x005776          0x2 shared_data_init
+.shared.dinit     0x005772          0x2
+ .shared.dinit    0x005772          0x2 shared_data_init

@@ -260,6 +260,7 @@ void CommandPoll (void)
                 ptr = (uint8_t *)&temp;
                 BytesSent = 0;
                 BytesRemaining = 2*N;
+                TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
                 while(BytesSent < 2*N)      //later need to change send and wiznet send to allow (eds) ptr; currently these functions use (uint8_t*) pointer
                 {
                     for(i = 0; i<1024; i++)
@@ -282,6 +283,7 @@ void CommandPoll (void)
                        BytesRemaining -= ret;
                     }
                 }
+                TRISBbits.TRISB14 = 0;  //impulse bit pin on RB14 is input so no impulse signal generated
                 mLED_2_Off();
                 break;
             case startGenerator:
@@ -309,7 +311,7 @@ void CommandPoll (void)
                         }
                  }
 
-                TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
+                //TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
                 PTCON = 0x8000;     //turn on PWM
                 IPC0bits.T1IP = 0x05;   // Set DDS Timer 1 Interrupt Priority Level higher than ADC; reset default is level 4 for ADC
                 //IPC0bits.T1IP = 0x01;   // Set DDS Timer 1 Interrupt Priority Level lower than ADC; reset default is level 4 for ADC
@@ -327,19 +329,19 @@ void CommandPoll (void)
 //////////////                T4CONbits.TON = 0;      //start timer 4
 //////////////                DMA0CONbits.CHEN = 0;       //turn on DMA
 
-                TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
+                //TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
                 LATBbits.LATB14 = 0;    //impluse bit = 0 to be sure; probably not needed
                 break;
             case startNoiseGenerator:
                 RxBuff[0] = 0;                  //reset command to 0 so only once executed
                 NoiseSignalFlag = true;        //flag used in timer1 interrupt to indicate gerating noise, not signal
-                TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
+                //TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
                 PTCON = 0x8000;                 //turn on PWM
                 IPC0bits.T1IP = 0x01;   // Sets ADC interrupt prioity higher than DDS; allows time for rand() function
                 SetTmr1(127);                   //Timer Period = (Fcyc/DDS Update Rate)-1 = (60MHz/468750)-1 = 128-1
                 break;
             case startImpulseGenerator:
-                TRISBbits.TRISB14 = 0;  //PWM1H on RB14 is output;  not used in Elektor version
+                //TRISBbits.TRISB14 = 0;  //PWM1H on RB14 is output;  not used in Elektor version
                 LATBbits.LATB14 = 0;    //impluse bit = 0 initially
                 PTCON = 0x0000;     //turn off PWM
                 break;

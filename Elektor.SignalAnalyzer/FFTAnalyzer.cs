@@ -207,6 +207,7 @@ namespace Elektor.SignalAnalyzer
                     }
 
                     FFTData fftData = new FFTData(fft, rms, args.SamplesPerSecond);
+                    fftData.Statistics.Calculate(fft, rms);
                     e.Result = fftData;
                 }
                 _fftAvgCnt++; //increment pointer to ring buffer for spectra                        

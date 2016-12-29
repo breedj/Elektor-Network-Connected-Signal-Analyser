@@ -85,7 +85,7 @@ namespace Elektor.SignalAnalyzer
             uint macAddrLen = (uint)macAddr.Length;
 
             if (SendARP(BitConverter.ToInt32(ip.GetAddressBytes(), 0), 0, macAddr, ref macAddrLen) != 0)
-                throw new InvalidOperationException("SendARP failed.");
+                return "00:00:00:00:00:00";
 
             string[] str = new string[(int)macAddrLen];
             for (int i = 0; i < macAddrLen; i++)

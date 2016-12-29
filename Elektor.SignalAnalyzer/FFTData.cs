@@ -75,6 +75,30 @@ namespace Elektor.SignalAnalyzer
         public double ResolutionBandWith
         {
             get { return SamplesPerSecond / (FreqDomain.Length * 2.0); }
-        }                
+        }
+
+        static FFTStatistics _statistics = new FFTStatistics();
+        /// <summary>
+        /// fft statistics
+        /// </summary>
+        public FFTStatistics Statistics
+        {
+            get
+            {
+                return _statistics;
+            }
+            private set
+            {
+                _statistics = value;
+            }
+        }
+
+        /// <summary>
+        /// Clear max trace
+        /// </summary>
+        public static void ResetMaxTrace()
+        {
+            _statistics.ResetMaxTrace();
+        }
     }
 }

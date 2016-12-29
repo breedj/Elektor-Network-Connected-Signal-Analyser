@@ -139,6 +139,9 @@
             this.rbFFTViewCalibrated = new System.Windows.Forms.RadioButton();
             this.rbFFTViewUncalibrated = new System.Windows.Forms.RadioButton();
             this.btnCalibrate = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblDataRate = new System.Windows.Forms.Label();
+            this.chkFFTDrawMaxTrace = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.spectrum)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -1408,6 +1411,42 @@
             this.btnCalibrate.UseVisualStyleBackColor = true;
             this.btnCalibrate.Click += new System.EventHandler(this.btnCalibrate_Click);
             // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.Color.White;
+            this.label9.Location = new System.Drawing.Point(617, 378);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(90, 13);
+            this.label9.TabIndex = 110;
+            this.label9.Text = "Data update rate:";
+            // 
+            // lblDataRate
+            // 
+            this.lblDataRate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDataRate.AutoSize = true;
+            this.lblDataRate.BackColor = System.Drawing.Color.White;
+            this.lblDataRate.Location = new System.Drawing.Point(708, 378);
+            this.lblDataRate.Name = "lblDataRate";
+            this.lblDataRate.Size = new System.Drawing.Size(13, 13);
+            this.lblDataRate.TabIndex = 109;
+            this.lblDataRate.Text = "?";
+            // 
+            // chkFFTDrawMaxTrace
+            // 
+            this.chkFFTDrawMaxTrace.AutoSize = true;
+            this.chkFFTDrawMaxTrace.BackColor = System.Drawing.Color.White;
+            this.chkFFTDrawMaxTrace.Location = new System.Drawing.Point(921, 419);
+            this.chkFFTDrawMaxTrace.Name = "chkFFTDrawMaxTrace";
+            this.chkFFTDrawMaxTrace.Size = new System.Drawing.Size(100, 17);
+            this.chkFFTDrawMaxTrace.TabIndex = 111;
+            this.chkFFTDrawMaxTrace.Text = "Draw max trace";
+            this.chkFFTDrawMaxTrace.UseVisualStyleBackColor = false;
+            this.chkFFTDrawMaxTrace.CheckedChanged += new System.EventHandler(this.chkFFTDrawMaxTrace_CheckedChanged);
+            // 
             // SygnalAnalyzerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1415,6 +1454,9 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.DarkKhaki;
             this.ClientSize = new System.Drawing.Size(1247, 749);
+            this.Controls.Add(this.chkFFTDrawMaxTrace);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.lblDataRate);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.rbDbm);
             this.Controls.Add(this.rbVrms);
@@ -1581,6 +1623,9 @@
         private System.Windows.Forms.RadioButton rbFFTViewUncalibrated;
         private System.Windows.Forms.Button btnCalibrate;
         private System.Windows.Forms.Button btnNoiseAutoSet;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblDataRate;
+        private System.Windows.Forms.CheckBox chkFFTDrawMaxTrace;
     }
 }
 
