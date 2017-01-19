@@ -5,7 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>user.h</itemPath>
-      <itemPath>delay.h</itemPath>
       <itemPath>socket.h</itemPath>
       <itemPath>w5500.h</itemPath>
       <itemPath>wizchip_conf.h</itemPath>
@@ -22,7 +21,6 @@
       <itemPath>main.c</itemPath>
       <itemPath>traps.c</itemPath>
       <itemPath>user.c</itemPath>
-      <itemPath>delay.c</itemPath>
       <itemPath>socket.c</itemPath>
       <itemPath>w5500.c</itemPath>
       <itemPath>wizchip_conf.c</itemPath>
@@ -2015,6 +2013,7 @@
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

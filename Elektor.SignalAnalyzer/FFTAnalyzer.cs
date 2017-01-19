@@ -266,6 +266,7 @@ namespace Elektor.SignalAnalyzer
                 fftw.destroy_plan(_fplan);
                 _hdin.Free();
                 _hdout.Free();
+                _fftSize = 0;
             }
             catch (Exception)
             { 

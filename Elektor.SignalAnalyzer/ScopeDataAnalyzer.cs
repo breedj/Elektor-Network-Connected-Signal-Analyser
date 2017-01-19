@@ -14,14 +14,14 @@ namespace Elektor.SignalAnalyzer
         // Conversion
         const double AmpGain = 3.902439;  //Nominal value; AmpGain = 4k/(1k + 50//50); 
         const double DcBias = 1.470732;   //Nominal value; bias=(1+4000/1025)*Vref(=.3v)
-        
+        static double measurementNr = 0;
 
         #region Public Methods
 
         public ScopeData ScopeDataFromSamples(double[] samples)
-        {
+        {            
             ScopeData scopeData = new ScopeData();
-
+            scopeData.MeasurementNr = measurementNr++;
             // Calculate DC term
             scopeData.DCterm = CalculateDcTerm(samples);    //calculates signal average (DC term)
 

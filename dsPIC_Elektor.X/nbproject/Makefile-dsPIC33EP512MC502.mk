@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=interrupts.c main.c traps.c user.c delay.c socket.c w5500.c wizchip_conf.c dhcp.c
+SOURCEFILES_QUOTED_IF_SPACED=interrupts.c main.c traps.c user.c socket.c w5500.c wizchip_conf.c dhcp.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/interrupts.o ${OBJECTDIR}/main.o ${OBJECTDIR}/traps.o ${OBJECTDIR}/user.o ${OBJECTDIR}/delay.o ${OBJECTDIR}/socket.o ${OBJECTDIR}/w5500.o ${OBJECTDIR}/wizchip_conf.o ${OBJECTDIR}/dhcp.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/interrupts.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/traps.o.d ${OBJECTDIR}/user.o.d ${OBJECTDIR}/delay.o.d ${OBJECTDIR}/socket.o.d ${OBJECTDIR}/w5500.o.d ${OBJECTDIR}/wizchip_conf.o.d ${OBJECTDIR}/dhcp.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/interrupts.o ${OBJECTDIR}/main.o ${OBJECTDIR}/traps.o ${OBJECTDIR}/user.o ${OBJECTDIR}/socket.o ${OBJECTDIR}/w5500.o ${OBJECTDIR}/wizchip_conf.o ${OBJECTDIR}/dhcp.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/interrupts.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/traps.o.d ${OBJECTDIR}/user.o.d ${OBJECTDIR}/socket.o.d ${OBJECTDIR}/w5500.o.d ${OBJECTDIR}/wizchip_conf.o.d ${OBJECTDIR}/dhcp.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/interrupts.o ${OBJECTDIR}/main.o ${OBJECTDIR}/traps.o ${OBJECTDIR}/user.o ${OBJECTDIR}/delay.o ${OBJECTDIR}/socket.o ${OBJECTDIR}/w5500.o ${OBJECTDIR}/wizchip_conf.o ${OBJECTDIR}/dhcp.o
+OBJECTFILES=${OBJECTDIR}/interrupts.o ${OBJECTDIR}/main.o ${OBJECTDIR}/traps.o ${OBJECTDIR}/user.o ${OBJECTDIR}/socket.o ${OBJECTDIR}/w5500.o ${OBJECTDIR}/wizchip_conf.o ${OBJECTDIR}/dhcp.o
 
 # Source Files
-SOURCEFILES=interrupts.c main.c traps.c user.c delay.c socket.c w5500.c wizchip_conf.c dhcp.c
+SOURCEFILES=interrupts.c main.c traps.c user.c socket.c w5500.c wizchip_conf.c dhcp.c
 
 
 CFLAGS=
@@ -115,13 +115,6 @@ ${OBJECTDIR}/user.o: user.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/user.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  user.c  -o ${OBJECTDIR}/user.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/user.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_dsPIC33EP512MC502=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -mlarge-data -menable-large-arrays -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/user.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
-${OBJECTDIR}/delay.o: delay.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/delay.o.d 
-	@${RM} ${OBJECTDIR}/delay.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  delay.c  -o ${OBJECTDIR}/delay.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/delay.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -mno-eds-warn  -omf=elf -DXPRJ_dsPIC33EP512MC502=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -mlarge-data -menable-large-arrays -O0 -msmart-io=1 -Wall -msfr-warn=off  
-	@${FIXDEPS} "${OBJECTDIR}/delay.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 ${OBJECTDIR}/socket.o: socket.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -179,13 +172,6 @@ ${OBJECTDIR}/user.o: user.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/user.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  user.c  -o ${OBJECTDIR}/user.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/user.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_dsPIC33EP512MC502=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -mlarge-data -menable-large-arrays -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/user.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
-${OBJECTDIR}/delay.o: delay.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/delay.o.d 
-	@${RM} ${OBJECTDIR}/delay.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  delay.c  -o ${OBJECTDIR}/delay.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/delay.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_dsPIC33EP512MC502=$(CND_CONF)  -no-legacy-libc  $(COMPARISON_BUILD)  -mlarge-data -menable-large-arrays -O0 -msmart-io=1 -Wall -msfr-warn=off  
-	@${FIXDEPS} "${OBJECTDIR}/delay.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 ${OBJECTDIR}/socket.o: socket.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 

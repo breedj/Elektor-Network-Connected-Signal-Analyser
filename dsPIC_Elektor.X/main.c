@@ -7,11 +7,12 @@
 #include <stdbool.h>       /* Includes true/false definition                  */
 #include <string.h>
 #include "user.h"
-#include "delay.h"
+//#include "delay.h"
 #include "socket.h"        //ethernet stuff
 #include "dhcp.h"
 #include <math.h>
 #include <stdlib.h>
+#include <libpic30.h>       //delay in here as well
 
 
 _FOSCSEL(FNOSC_FRC & PWMLOCK_OFF);      //starts up using built in osc; release PWM locking feature
@@ -90,6 +91,7 @@ void SetTmr5(unsigned int); //DHCP
 void my_ip_assign(void);    //DHCP
 void my_ip_conflict(void);  //DHCP
 void CommandPoll(void);
+void initDma1and2(void);
 
 int16_t main(void)
 {
@@ -103,14 +105,17 @@ int16_t main(void)
     ConfigureOscillator(M, N1);      //set up for 60 MIPs
     platform_init();                 //Initialize lcd, analog pins, switches, leds
     srand(1);                        //seed random number generator for noise generator
+    initDma1and2();                 //spi dma used for uP to W5500 transfers
     
     mLED_1_On();
     /* reset W5500 */
     WIZCS = 1;
     WIZRESET = 0;
-    Delay(Delay_5mS_Cnt);   //spec asks for 500 usec
+    //Delay(Delay_5mS_Cnt);   //spec asks for 500 usec
+    __delay_ms(5);
     WIZRESET = 1;
-    Delay(Delay_250mS_Cnt);    //spec ask for 150 msec
+    //Delay(Delay_250mS_Cnt);    //spec ask for 150 msec
+    __delay_ms(250);
     #ifdef _MAIN_DEBUG_
         printf("WIZ5500 is reset\r\n");
     #endif
@@ -260,7 +265,8 @@ void CommandPoll (void)
                 ptr = (uint8_t *)&temp;
                 BytesSent = 0;
                 BytesRemaining = 2*N;
-                TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
+    TRISBbits.TRISB14 = 0;
+    LATBbits.LATB14 = 1;
                 while(BytesSent < 2*N)      //later need to change send and wiznet send to allow (eds) ptr; currently these functions use (uint8_t*) pointer
                 {
                     for(i = 0; i<1024; i++)
@@ -283,7 +289,7 @@ void CommandPoll (void)
                        BytesRemaining -= ret;
                     }
                 }
-                TRISBbits.TRISB14 = 0;  //impulse bit pin on RB14 is input so no impulse signal generated
+    LATBbits.LATB14 = 0;
                 mLED_2_Off();
                 break;
             case startGenerator:
@@ -330,7 +336,7 @@ void CommandPoll (void)
 //////////////                DMA0CONbits.CHEN = 0;       //turn on DMA
 
                 //TRISBbits.TRISB14 = 1;  //impulse bit pin on RB14 is input so no impulse signal generated
-                LATBbits.LATB14 = 0;    //impluse bit = 0 to be sure; probably not needed
+                //LATBbits.LATB14 = 0;    //impluse bit = 0 to be sure; probably not needed
                 break;
             case startNoiseGenerator:
                 RxBuff[0] = 0;                  //reset command to 0 so only once executed
@@ -341,9 +347,9 @@ void CommandPoll (void)
                 SetTmr1(127);                   //Timer Period = (Fcyc/DDS Update Rate)-1 = (60MHz/468750)-1 = 128-1
                 break;
             case startImpulseGenerator:
-                //TRISBbits.TRISB14 = 0;  //PWM1H on RB14 is output;  not used in Elektor version
-                LATBbits.LATB14 = 0;    //impluse bit = 0 initially
-                PTCON = 0x0000;     //turn off PWM
+////                TRISBbits.TRISB14 = 0;  //PWM1H on RB14 is output;  not used in Elektor version
+////                LATBbits.LATB14 = 0;    //impluse bit = 0 initially
+////                PTCON = 0x0000;     //turn off PWM
                 break;
             case changeFcyc:
                 RxBuff[0] = 0;  //reset command to 0 so only once executed
@@ -483,32 +489,8 @@ void platform_init(void)
     PTCONbits.EIPU = 1;   //immediate update PDC enabled
     PWMCON1bits.IUE = 1;
 //    PTCON = 0x8000;     //turn on PWM
-
-////////////    TMR4 = 0x0000;
-////////////    PR4 = 4999;             // Trigger ADC1 every 125 ?s @ 40 MIPS
-////////////    IFS1bits.T4IF = 0;   // Clear Timer4 interrupt
-////////////    IEC1bits.T4IE = 1;
-////////////    //T4CONbits.TON = 1;
-////////////
-////////////    DMA0CONbits.CHEN =0;        //disable dma
-////////////    DMA0CONbits.SIZE = 1;       //signal gen table byte for now
-////////////    DMA0CONbits.DIR = 1;        //from RAM to peripheral
-////////////    DMA0CONbits.AMODE = 0;      //register indirect, post increment
-////////////    DMA0CONbits.MODE = 0;       //continuous, ping pong off
-////////////    DMA0REQbits.IRQSEL = 0x1C;  //timer 4 triggers dma
-////////////
-////////////    DMA0STAL = __builtin_dmaoffset(SIN8);
-////////////    DMA0STAH = 0x0000;
-////////////
-////////////    IFS0bits.DMA0IF = 0;// Clear the DMA Interrupt Flag bit
-////////////    IEC0bits.DMA0IE = 0;// disable the DMA Interrupt
-////////////
-////////////    DMA0PAD = (volatile unsigned int)&PDC1;     //from RAM to PWM duty cycle
-////////////    DMA0CNT = 126;
-////////////
-////////////    //DMA0CON.CHEN = 1;       //turn on DMA
-
   }
+
 void InitSPI2(void)
 {
     SPI1STATbits.SPIEN = 0;         //turn SP1 off to setup
@@ -516,8 +498,8 @@ void InitSPI2(void)
     SPI1CON1bits.MSTEN = 1;         //master mode enabled
     SPI1CON1bits.SMP = 1;           //Input data is sampled at end of data output time (recommended for fastest speed; set after MSTEN)
     SPI1CON1bits.PPRE = 0b11;       //Primary prescale 1:1
-    SPI1CON1bits.SPRE = 0b010;      //Secondary prescale 6:1 (10MHz)
-    //SPI1CON1bits.SPRE = 0b100;      //Secondary prescale 4:1 (15MHz)
+    //SPI1CON1bits.SPRE = 0b010;      //Secondary prescale 6:1 (10MHz)
+    SPI1CON1bits.SPRE = 0b100;      //Secondary prescale 4:1 (15MHz)
     SPI1STATbits.SPIEN = 1;         //turn SP1 on
 }
 void ConfigureOscillator(unsigned int M, unsigned char N1)
@@ -604,16 +586,31 @@ void my_ip_conflict(void)
    while(1); // this example is halt.
 }
 
-////void __attribute__((__interrupt__,no_auto_psv)) _DMA0Interrupt(void)
-////{
-////IFS0bits.DMA0IF = 0;
-////}
+void initDma1and2(void)
+{
+    DMA1CONbits.DIR = 1;      //RAM to SPI
+    DMA1CONbits.AMODE = 0;    //register indirect with post increment
+    DMA1CONbits.SIZE = 1;     //byte
+    DMA1CONbits.MODE = 1;     //one shot, no ping pong
 
-////void __attribute__((__interrupt__, no_auto_psv)) _T4Interrupt(void)
-////{
-////        mLED_2_Toggle();          //debugging tool
-////        IFS1bits.T4IF = 0; //Clear Timer1 interrupt flag
-////}
+    DMA1REQ = 0x000A;         //SPI is peripheral for requests
+    DMA1PAD = (volatile unsigned int) &SPI1BUF;   //SPI1 data buffer
+    DMA1STAH = 0;
+    DMA1STBH = 0;
+
+    DMA2CONbits.DIR = 0;      //spi to RAM
+    //DMA2CONbits.AMODE = 0;    //register indirect with post increment
+    DMA2CONbits.AMODE = 1;    //register indirect without post increment/////////////////////////////////jmportant!!!!!
+    DMA2CONbits.SIZE = 1;     //byte
+    DMA2CONbits.MODE = 1;     //one shot, no ping pong
+
+    DMA2REQ = 0x000A;
+    DMA2PAD = (volatile unsigned int) &SPI1BUF;
+    DMA2STAH = 0;
+    DMA2STBH = 0;
+}
+
+
 
 
 

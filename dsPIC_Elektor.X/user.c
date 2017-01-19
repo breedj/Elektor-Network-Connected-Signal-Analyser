@@ -92,13 +92,13 @@ void __attribute__((interrupt, no_auto_psv)) _AD1Interrupt (void)
         extern unsigned int N, MainBufferIndex,MainBufferFull;
         extern unsigned int MainBuffer[];
 
-        LATBbits.LATB14 = 0;        //clear impulse bit after one sample period
+//        LATBbits.LATB14 = 0;        //clear impulse bit after one sample period
         MainBuffer[MainBufferIndex] = ADC1BUF0;
         MainBufferIndex ++;
 	//mLED_2_Toggle()                         // debugging aid
 	//IFS0bits.AD1IF = 0;			// Clear the A/D interrupt flag bit
-        if(MainBufferIndex == N/2)
-            LATBbits.LATB14 = 1;  //set impluse bit for one sample period
+//        if(MainBufferIndex == N/2)
+//            LATBbits.LATB14 = 1;  //set impluse bit for one sample period
         if(MainBufferIndex >= N) //check to see if you have collected N samples
         {
             MainBufferIndex = 0;

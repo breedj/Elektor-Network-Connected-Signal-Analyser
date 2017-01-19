@@ -248,7 +248,7 @@ namespace Elektor.SignalAnalyzer
             lock (lockObj)
             {
                 for (int i = 0; i < _minTrace.Length; i++)
-                    _minTrace[i] = 0.01;                
+                    _minTrace[i] = 10;                
             }
         }
 
@@ -260,7 +260,7 @@ namespace Elektor.SignalAnalyzer
             lock (lockObj)
             {
                 for (int i = 0; i < _maxTrace.Length; i++)
-                    _maxTrace[i] = -0.01;
+                    _maxTrace[i] = -10;
             }
         }
 

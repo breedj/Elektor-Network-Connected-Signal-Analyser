@@ -557,7 +557,6 @@ namespace Elektor.SignalAnalyzer
                         && TriggerMode != TriggerModes.Off // Trigger on
                         && scopeData.Triggered) // Currently triggered
                     {
-                        Debug.WriteLine("return scopedata");
                         lock (stateLock)
                             _acquireState = AcquireStates.Stopped; // Stop acquiring                                                
                         e.Result = scopeData;
@@ -642,19 +641,31 @@ namespace Elektor.SignalAnalyzer
         /// <param name="e"></param>
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (!_worker.CancellationPending)
+            AcquireStates state;
+            lock (stateLock)
+                state = _acquireState;
+            if (!_worker.CancellationPending && state != AcquireStates.Stopped)
             {
                 // Get data from DoWork. This event runs in UI thread.
                 ScopeData scopeData = (ScopeData) e.UserState;
-                OnDataReady(new ScopeEventArgs(scopeData));
+                OnDataReady(new ScopeEventArgs(scopeData));                
             }
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            // Get data from DoWork. This event runs in UI thread.
-            ScopeData scopeData = (ScopeData)e.Result;
-            OnDataReady(new ScopeEventArgs(scopeData));
+            try
+            {
+                if (e.Cancelled || e.Result == null)
+                    return;
+                // Get data from DoWork. This event runs in UI thread.
+                ScopeData scopeData = (ScopeData)e.Result;
+                OnDataReady(new ScopeEventArgs(scopeData));                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
 

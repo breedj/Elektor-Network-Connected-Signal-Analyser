@@ -18,7 +18,7 @@ namespace Elektor.SignalAnalyzer
 
         public override void Visit(NCalc.Domain.UnaryExpression expression)
         {
-            expression.Accept(this);
+            expression.Expression.Accept(this);
         }
 
         public override void Visit(NCalc.Domain.BinaryExpression expression)
@@ -38,9 +38,12 @@ namespace Elektor.SignalAnalyzer
 
         public override void Visit(Function function)
         {
-            foreach (var expression in function.Expressions)
+            if (function.Expressions != null)
             {
-                expression.Accept(this);
+                foreach (var expression in function.Expressions)
+                {
+                    expression.Accept(this);
+                }
             }
         }
 

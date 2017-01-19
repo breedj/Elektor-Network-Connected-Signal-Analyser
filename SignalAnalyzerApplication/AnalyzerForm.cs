@@ -96,15 +96,33 @@ namespace SignalAnalyzerApplication
             _analyzer.RenderScope += analyzer_RenderScope;
 
             dataIn.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+            dataIn.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
+            dataIn.ChartAreas[0].CursorX.AutoScroll = true;
+            dataIn.ChartAreas[0].CursorY.AutoScroll = true;
+            dataIn.ChartAreas[0].AxisX.ScrollBar.Enabled = true;
+            dataIn.ChartAreas[0].AxisY.ScrollBar.Enabled = true;
+            dataIn.ChartAreas[0].CursorX.IsUserEnabled = true;
+            dataIn.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+            dataIn.ChartAreas[0].CursorY.IsUserEnabled = true;
+            dataIn.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
             dataIn.MouseWheel += chart_MouseWheel;
             dataIn.CursorPositionChanged += dataIn_CursorPositionChanged;
             dataIn.Series["Series1"].Points.Clear();
 
             spectrum.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+            spectrum.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
+            spectrum.ChartAreas[0].CursorX.AutoScroll = true;
+            spectrum.ChartAreas[0].CursorY.AutoScroll = true;
+            spectrum.ChartAreas[0].AxisX.ScrollBar.Enabled = true;
+            spectrum.ChartAreas[0].AxisY.ScrollBar.Enabled = true;
+            spectrum.ChartAreas[0].CursorX.IsUserEnabled = true;
+            spectrum.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+            spectrum.ChartAreas[0].CursorY.IsUserEnabled = true;
+            spectrum.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
             spectrum.MouseWheel += chart_MouseWheel;
             spectrum.CursorPositionChanged += spectrum_CursorPositionChanged;
             spectrum.Series["Series1"].Points.Clear();
-
+            
             _signalGenator.Connection = _connection;
             _signalGenator.Enabled = false;
             _signalGenator.Frequency = 1000;
@@ -159,33 +177,37 @@ namespace SignalAnalyzerApplication
         /// <param name="e"></param>
         private void dataIn_CursorPositionChanged(object sender, System.Windows.Forms.DataVisualization.Charting.CursorEventArgs e)
         {
-            ushort index = (ushort)((dataIn.ChartAreas["ChartArea1"].CursorX.Position) /   //find index of chart data point closest to cursor position
-                               (dataIn.ChartAreas["ChartArea1"].CursorX.Interval));
-
-            string xString = "";
-            string yString = "";
-            if (dataIn.Series[0].Points.Count >= index)
+            try
             {
-                double x = dataIn.Series[0].Points[index].XValue;
-                double y = dataIn.Series[0].Points[index].YValues[0];
+                ushort index = (ushort)((dataIn.ChartAreas["ChartArea1"].CursorX.Position) /   //find index of chart data point closest to cursor position
+                                   (dataIn.ChartAreas["ChartArea1"].CursorX.Interval));
 
-                dataIn.ChartAreas["ChartArea1"].CursorY.Position = y;
-                
-                if (x < 1E-3)
-                    xString = $"{(x * 1E6).ToString("F3")} μs";
-                else if (x < 1)
-                    xString = $"{(x * 1000).ToString("F3")} ms";
-                else
-                    xString = $"{x.ToString("F3")} s";
-                
-                if (y < 1E-3)
-                    yString = $"{(y * 1E6).ToString("F3")} μV";
-                else if (y < 1)
-                    yString = $"{(y * 1000).ToString("F3")} mV";
-                else
-                    yString = $"{y.ToString("F3")} V";
+                string xString = "";
+                string yString = "";
+                if (dataIn.Series[0].Points.Count >= index)
+                {
+                    double x = dataIn.Series[0].Points[index].XValue;
+                    double y = dataIn.Series[0].Points[index].YValues[0];
+
+                    dataIn.ChartAreas["ChartArea1"].CursorY.Position = y;
+
+                    if (x < 1E-3)
+                        xString = $"{(x * 1E6).ToString("F3")} μs";
+                    else if (x < 1)
+                        xString = $"{(x * 1000).ToString("F3")} ms";
+                    else
+                        xString = $"{x.ToString("F3")} s";
+
+                    if (y < 1E-3)
+                        yString = $"{(y * 1E6).ToString("F3")} μV";
+                    else if (y < 1)
+                        yString = $"{(y * 1000).ToString("F3")} mV";
+                    else
+                        yString = $"{y.ToString("F3")} V";
+                }
+                lblScopeCursor.Text = $"{yString} @ {xString}";
             }
-            lblScopeCursor.Text = $"{yString} @ {xString}";
+            catch (Exception) { }
         }
 
         /// <summary>
@@ -195,51 +217,55 @@ namespace SignalAnalyzerApplication
         /// <param name="e"></param>
         private void spectrum_CursorPositionChanged(object sender, System.Windows.Forms.DataVisualization.Charting.CursorEventArgs e)
         {
-            ushort index = (ushort)((spectrum.ChartAreas["ChartArea1"].CursorX.Position) /   //find index of chart data point closest to cursor position
-                                    (spectrum.ChartAreas["ChartArea1"].CursorX.Interval));
-
-            if (spectrum.Series[0].Points.Count >= index)
+            try
             {
-                double x = spectrum.Series[0].Points[index].XValue;                
-                spectrum.ChartAreas["ChartArea1"].CursorY.Position = spectrum.Series[0].Points[index].YValues[0];
+                ushort index = (ushort)((spectrum.ChartAreas["ChartArea1"].CursorX.Position) /   //find index of chart data point closest to cursor position
+                                        (spectrum.ChartAreas["ChartArea1"].CursorX.Interval));
 
-                string rmsString;
-                string xString;
-                if (x > 1E3)
-                    xString = $"{(x/1E3).ToString("F3")} kHz";
-                else
-                    xString = $"{x.ToString("F3")} Hz";
-                
-                if (rbDbm.Checked)
+                if (spectrum.Series[0].Points.Count >= index)
                 {
-                    // y is in dbm.
-                    double dBm = spectrum.Series[0].Points[index].YValues[0];
-                    double vrms = Math.Sqrt(Math.Pow(10, (dBm/10))*.05);
-                    if (vrms < 1E-3)
-                        rmsString = $"{(vrms*1E6).ToString("F3")} μVrms";
-                    else if (vrms < 1)
-                        rmsString = $"{(vrms*1E3).ToString("F3")} mVrms";
-                    else
-                        rmsString = $"{vrms.ToString("F3")} Vrms";
+                    double x = spectrum.Series[0].Points[index].XValue;
+                    spectrum.ChartAreas["ChartArea1"].CursorY.Position = spectrum.Series[0].Points[index].YValues[0];
 
-                    lblFFTCursor.Text = $"{dBm.ToString("F3")} dBm / {rmsString} @ {xString}";
-                }
-                else
-                {
-                    // y is in Vrms                    
-                    double Vrms = spectrum.Series[0].Points[index].YValues[0];
-                    if (Vrms < 1E-3)
-                        rmsString = $"{(Vrms * 1E6).ToString("F3")} μVrms";
-                    else if (Vrms < 1)
-                        rmsString = $"{(Vrms * 1E3).ToString("F3")} mVrms";
+                    string rmsString;
+                    string xString;
+                    if (x > 1E3)
+                        xString = $"{(x / 1E3).ToString("F3")} kHz";
                     else
-                        rmsString = $"{Vrms.ToString("F3")} Vrms";
+                        xString = $"{x.ToString("F3")} Hz";
 
-                    // Vrms to dBm
-                    double dbm = (10 * Math.Log10(Math.Pow(Vrms, 2) / 50.0)) + 30; // 50 Ohm , 1mW = 30dBm
-                    lblFFTCursor.Text = $"{dbm.ToString("F3")} dBm / {rmsString} @ {xString}";
+                    if (rbDbm.Checked)
+                    {
+                        // y is in dbm.
+                        double dBm = spectrum.Series[0].Points[index].YValues[0];
+                        double vrms = Math.Sqrt(Math.Pow(10, (dBm / 10)) * .05);
+                        if (vrms < 1E-3)
+                            rmsString = $"{(vrms * 1E6).ToString("F3")} μVrms";
+                        else if (vrms < 1)
+                            rmsString = $"{(vrms * 1E3).ToString("F3")} mVrms";
+                        else
+                            rmsString = $"{vrms.ToString("F3")} Vrms";
+
+                        lblFFTCursor.Text = $"{dBm.ToString("F3")} dBm / {rmsString} @ {xString}";
+                    }
+                    else
+                    {
+                        // y is in Vrms                    
+                        double Vrms = spectrum.Series[0].Points[index].YValues[0];
+                        if (Vrms < 1E-3)
+                            rmsString = $"{(Vrms * 1E6).ToString("F3")} μVrms";
+                        else if (Vrms < 1)
+                            rmsString = $"{(Vrms * 1E3).ToString("F3")} mVrms";
+                        else
+                            rmsString = $"{Vrms.ToString("F3")} Vrms";
+
+                        // Vrms to dBm
+                        double dbm = (10 * Math.Log10(Math.Pow(Vrms, 2) / 50.0)) + 30; // 50 Ohm , 1mW = 30dBm
+                        lblFFTCursor.Text = $"{dbm.ToString("F3")} dBm / {rmsString} @ {xString}";
+                    }
                 }
             }
+            catch (Exception) { }
         }
         
 
@@ -682,7 +708,7 @@ namespace SignalAnalyzerApplication
             _analyzer.AcquireState = AcquireStates.Single;
             btnStartAcquisition.Text = "Run";
             btnStartAcquisition.BackColor = Color.LightGreen;
-            btnSinleShot.BackColor = Color.LightGreen;
+            btnSinleShot.BackColor = Color.Orange;
         }
 
 
@@ -703,14 +729,14 @@ namespace SignalAnalyzerApplication
         {           
             try
             {
-                if (_analyzer.AcquireState == AcquireStates.Stopped)
+                if (data == null)
                     return;
 
                 bool renderMinMax = false;
-                if (DateTime.Now.Subtract(_lastFftRenderTime).TotalMilliseconds > 200) // Only draw min.max trace 5 times a second
+                if (DateTime.Now.Subtract(_lastMinMaxRenderTime).TotalMilliseconds > 200) // Only draw min.max trace 5 times a second
                 {
                     renderMinMax = true;
-                    _lastFftRenderTime = DateTime.Now;
+                    _lastMinMaxRenderTime = DateTime.Now;
                 }
                 if (renderMinMax || !(chkDrawMinTrace.Checked || chkDrawMaxTrace.Checked))
                 {   
@@ -809,13 +835,14 @@ namespace SignalAnalyzerApplication
                 }
                 
                 RenderScopeStats(data);
-                RenderDisplayUpdateRate();
+                RenderDisplayUpdateRate(data.MeasurementNr);
 
                 // Stop button state after single shot
                 if (_analyzer.AcquireState == AcquireStates.Stopped)
                 {
                     btnStartAcquisition.Text = "Stop";
                     btnStartAcquisition.BackColor = Color.Red;
+                    btnSinleShot.BackColor = Color.Gainsboro;
                 }
             }
             catch (Exception)
@@ -825,26 +852,26 @@ namespace SignalAnalyzerApplication
 
 
         DateTime _lastUpdateRateRenderTime = DateTime.Now;        
-        readonly List<double> updateRates = new List<double>();
         readonly List<double> dataRates = new List<double>();
+        double oldMeasurementNr= 0;
         /// <summary>
         /// Calculate and render the display update rate of the scope view.
         /// </summary>
-        private void RenderDisplayUpdateRate()
+        private void RenderDisplayUpdateRate(double measurementNr)
         {
-            int _msElapsed = (int)_swWfs.ElapsedMilliseconds;
-            _swWfs.Restart();            
-            if (DateTime.Now.Subtract(_lastUpdateRateRenderTime).TotalMilliseconds > 1000 && updateRates.Any())
+            var elapsed = DateTime.Now.Subtract(_lastUpdateRateRenderTime).TotalMilliseconds;
+            if (elapsed >= 1000)
             {
-                lblWaveformsSecond.Text = updateRates.Average().ToString("F0") + "Hz";
-                lblDataRate.Text = dataRates.Average().ToString("F0") + "Hz";
-                updateRates.Clear();
+                var displayFreq = (measurementNr - oldMeasurementNr) * (1000.0 / elapsed);
+                oldMeasurementNr = measurementNr;
+                lblWaveformsSecond.Text = displayFreq.ToString("F0") + "Hz";            
+                if (dataRates.Count > 0)
+                    lblDataRate.Text = dataRates.Average().ToString("F0") + "Hz";
                 dataRates.Clear();
                 _lastUpdateRateRenderTime = DateTime.Now;
             }
             else
             {
-                updateRates.Add(1000.0 / _msElapsed);
                 dataRates.Add(1000.0 / _analyzer.DataReceiveInterval);
             }            
         }
@@ -911,16 +938,14 @@ namespace SignalAnalyzerApplication
 
         DateTime _lastMinMaxFFTRenderTime = DateTime.Now;
         void RenderFFTData(FFTData data)
-        {           
+        {            
             try
-            {
-                if (_analyzer.AcquireState == AcquireStates.Stopped)
-                    return;
+            {                  
                 lock (lck)
                 {
                     _fftData = data;
                 }
-
+                
                 bool renderMinMax = false;
                 if (DateTime.Now.Subtract(_lastMinMaxFFTRenderTime).TotalMilliseconds > 200) // Only draw min.max trace 5 times a second
                 {
@@ -1020,11 +1045,14 @@ namespace SignalAnalyzerApplication
                 }
 
                 // Render points
-                for (int i = 0; i < xPoints.Length; i++)
+                if (xPoints != null)
                 {
-                    spectrum.Series["Series1"].Points.AddXY(xPoints[i], yPoints[i]);
-                    if (xPointsMax != null && yPointsMax != null)
-                        spectrum.Series["Series2"].Points.AddXY(xPointsMax[i], yPointsMax[i]);
+                    for (int i = 0; i < xPoints.Length; i++)
+                    {
+                        spectrum.Series["Series1"].Points.AddXY(xPoints[i], yPoints[i]);
+                        if (xPointsMax != null && yPointsMax != null)
+                            spectrum.Series["Series2"].Points.AddXY(xPointsMax[i], yPointsMax[i]);
+                    }
                 }
                 spectrum.Series.ResumeUpdates();
                 spectrum.Series.Invalidate();
@@ -1250,9 +1278,8 @@ namespace SignalAnalyzerApplication
                 if (_fftData != null)
                 {
                     _calibrationDataFreqDomain = _fftData.FreqDomain.ToArray();
-                    _calibrationDataVrms = _fftData.Vrms.ToArray();
-                    if (udFFTAverages.Value > 1)
-                        rbFFTViewCalibrated.Checked = true;
+                    _calibrationDataVrms = _fftData.Vrms.ToArray();                    
+                    rbFFTViewCalibrated.Checked = true;
                 }                
                 else
                 {

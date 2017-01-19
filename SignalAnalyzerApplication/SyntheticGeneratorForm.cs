@@ -63,13 +63,31 @@ namespace SignalAnalyzerApplication
         
 
         private void Form1_Load(object sender, EventArgs e)
-        {          
+        {
             dataIn.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+            dataIn.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
+            dataIn.ChartAreas[0].CursorX.AutoScroll = true;
+            dataIn.ChartAreas[0].CursorY.AutoScroll = true;
+            dataIn.ChartAreas[0].AxisX.ScrollBar.Enabled = true;
+            dataIn.ChartAreas[0].AxisY.ScrollBar.Enabled = true;
+            dataIn.ChartAreas[0].CursorX.IsUserEnabled = true;
+            dataIn.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+            dataIn.ChartAreas[0].CursorY.IsUserEnabled = true;
+            dataIn.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
             dataIn.MouseWheel += chart_MouseWheel;
             dataIn.CursorPositionChanged += dataIn_CursorPositionChanged;
             dataIn.Series["Series1"].Points.Clear();
 
             spectrum.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+            spectrum.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
+            spectrum.ChartAreas[0].CursorX.AutoScroll = true;
+            spectrum.ChartAreas[0].CursorY.AutoScroll = true;
+            spectrum.ChartAreas[0].AxisX.ScrollBar.Enabled = true;
+            spectrum.ChartAreas[0].AxisY.ScrollBar.Enabled = true;
+            spectrum.ChartAreas[0].CursorX.IsUserEnabled = true;
+            spectrum.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+            spectrum.ChartAreas[0].CursorY.IsUserEnabled = true;
+            spectrum.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
             spectrum.MouseWheel += chart_MouseWheel;
             spectrum.CursorPositionChanged += spectrum_CursorPositionChanged;
             spectrum.Series["Series1"].Points.Clear();
@@ -555,7 +573,11 @@ namespace SignalAnalyzerApplication
             GetVariables();
         }
 
-       
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SyntheticGeneratorHelp frm = new SyntheticGeneratorHelp();
+            frm.ShowDialog();
+        }
     }
     
 }

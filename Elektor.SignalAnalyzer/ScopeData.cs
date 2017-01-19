@@ -63,6 +63,11 @@ namespace Elektor.SignalAnalyzer
         /// </summary>
         public bool Triggered { get; set; }
 
+        /// <summary>
+        /// Measurement number.
+        /// </summary>
+        public double MeasurementNr { get; set; }
+
         #endregion
 
 

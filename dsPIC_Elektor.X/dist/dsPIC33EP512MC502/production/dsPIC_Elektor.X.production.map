@@ -19,7 +19,6 @@ Command:
   build/dsPIC33EP512MC502/production/main.o \
   build/dsPIC33EP512MC502/production/traps.o \
   build/dsPIC33EP512MC502/production/user.o \
-  build/dsPIC33EP512MC502/production/delay.o \
   build/dsPIC33EP512MC502/production/socket.o \
   build/dsPIC33EP512MC502/production/w5500.o \
   build/dsPIC33EP512MC502/production/wizchip_conf.o \
@@ -56,6 +55,8 @@ d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(crt
                               (__resetPRI)
 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(data_init_extendedep.o)
                               d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(crt0_extendedep.o) (__data_init_extended)
+d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(delay32ep.eo)
+                              build/dsPIC33EP512MC502/production/main.o (___delay32)
 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(adddf3.epeo)
                               build/dsPIC33EP512MC502/production/main.o (___adddf3)
 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(addsf3.epeo)
@@ -164,12 +165,13 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200              0x161a          0x2127  (8487)
 .const                      0x181a               0x188           0x24c  (588)
-.text                       0x19a2              0x3b5c          0x590a  (22794)
-.dinit                      0x54fe               0x14a           0x1ef  (495)
-.text                       0x5648               0x12a           0x1bf  (447)
-.shared.dinit               0x5772                 0x2             0x3  (3)
+.text                       0x19a2              0x3bde          0x59cd  (22989)
+.dinit                      0x5580               0x14a           0x1ef  (495)
+.text                       0x56ca                0xe4           0x156  (342)
+.init.delay32               0x57ae                0x1c            0x2a  (42)
+.shared.dinit               0x57ca                 0x2             0x3  (3)
 
-                 Total program memory used (bytes):         0x802e  (32814) 6%
+                 Total program memory used (bytes):         0x80b2  (32946) 6%
 
 
 Ivt Memory  [Origin = 0x4, Length = 0x1fc]
@@ -185,6 +187,8 @@ section                    address   length (PC units)   length (bytes) (dec)
 .ivt._SoftTrapError           0x10                 0x2             0x3  (3)
 .ivt._T1Interrupt             0x1a                 0x2             0x3  (3)
 .ivt._AD1Interrupt            0x2e                 0x2             0x3  (3)
+.ivt._DMA1Interrupt           0x30                 0x2             0x3  (3)
+.ivt._DMA2Interrupt           0x44                 0x2             0x3  (3)
 .ivt._T5Interrupt             0x4c                 0x2             0x3  (3)
 
 
@@ -199,9 +203,11 @@ section                    address      alignment gaps    total length  (dec)
 .data                       0x1ecc                   0            0x26  (38)
 .bss                        0x1ef2                   0            0x1c  (28)
 .data                       0x1f0e                   0            0x2a  (42)
-.bss                        0x1f38                   0            0x14  (20)
-.data                       0x1f4c                   0             0x4  (4)
-_03EC8F605860e340           0x2bf0                   0          0xa410  (42000)
+.bss                        0x1f38                   0            0x12  (18)
+.data                       0x1f4a                   0             0x2  (2)
+.bss                        0x1f4c                   0             0x2  (2)
+.data                       0x1f4e                   0             0x2  (2)
+_03E6F9C0587d37ba           0x2bf0                   0          0xa410  (42000)
 
                  Total data memory used (bytes):         0xb360  (45920) 93%
 
@@ -274,7 +280,7 @@ External Symbols in Data Memory (by address):
                     0x1f44                  __outdone
                     0x1f45                  __sibuf
                     0x1f47                  __sobuf
-                    0x1f4a                  _temp_count
+                    0x1f4c                  _done
                     0x1f4e                  ___C30_UART
                     0x2bf0                  _MainBuffer
 
@@ -327,6 +333,7 @@ External Symbols in Data Memory (by name):
                     0x1eb9                  _dhcp_state
                     0x1ebc                  _dhcp_tick_1s
                     0x1f12                  _dhcp_tick_next
+                    0x1f4c                  _done
                     0x1002                  _gDATABUF
                     0x1e88                  _gWIZNETINFO
                     0x1402                  _msTicks
@@ -336,7 +343,6 @@ External Symbols in Data Memory (by name):
                     0x1e74                  _rxsize
                     0x144a                  _tbuff
                     0x146c                  _temp
-                    0x1f4a                  _temp_count
                     0x1d84                  _tempy
                     0x1e6c                  _txsize
 
@@ -344,8 +350,8 @@ External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x00022c                  __psv_init
-                  0x000238                  __data_init
                   0x000238                  __data_init_extended
+                  0x000238                  __data_init
                   0x000324                  __OscillatorFail
                   0x00032a                  __AddressError
                   0x000330                  __StackError
@@ -387,9 +393,9 @@ External Symbols in Program Memory (by address):
                   0x000a9e                  ___floatundidf
                   0x000af4                  ___floatundisf
                   0x000b52                  __sincosf
-                  0x000c24                  ___lesf2
-                  0x000c24                  ___eqsf2
                   0x000c24                  ___ltsf2
+                  0x000c24                  ___eqsf2
+                  0x000c24                  ___lesf2
                   0x000c28                  ___fixsfsi
                   0x000c6a                  _fmodf
                   0x000c6e                  __fmodrem
@@ -400,11 +406,11 @@ External Symbols in Program Memory (by address):
                   0x000d80                  _rand
                   0x000da6                  __printf_cdnopsuxX
                   0x000da6                  __printf_cdnopuxX
-                  0x000e4c                  __vfprintf_cdnopuxX
                   0x000e4c                  __vfprintf_cdnopsuxX
+                  0x000e4c                  __vfprintf_cdnopuxX
                   0x001574                  ___mulp32peds3
-                  0x001574                  ___mulp32eds3
                   0x001574                  ___mulsi3
+                  0x001574                  ___mulp32eds3
                   0x0015cc                  ___udivmoddi3
                   0x0016b2                  ___udivdi3
                   0x0016c0                  ___umoddi3
@@ -446,91 +452,93 @@ External Symbols in Program Memory (by address):
                   0x003a58                  _setsockopt
                   0x003bea                  _getsockopt
                   0x003d88                  _main
-                  0x003f3e                  _CommandPoll
-                  0x004392                  _wizchip_select
-                  0x00439a                  _wizchip_deselect
-                  0x0043a2                  _wizchip_write
-                  0x0043be                  _wizchip_read
-                  0x0043d4                  _network_init
-                  0x0044c4                  _tcps
-                  0x0045dc                  _platform_init
-                  0x00465c                  _InitSPI2
-                  0x00467e                  _ConfigureOscillator
-                  0x0046d4                  __T1Interrupt
-                  0x004724                  _SetTmr5
-                  0x004744                  __T5Interrupt
-                  0x00477e                  _my_ip_assign
-                  0x0047a6                  _my_ip_conflict
-                  0x0047ae                  _wizchip_cris_enter
-                  0x0047b4                  _wizchip_cris_exit
-                  0x0047ba                  _wizchip_cs_select
-                  0x0047c0                  _wizchip_cs_deselect
-                  0x0047c6                  _wizchip_bus_readbyte
-                  0x0047de                  _wizchip_bus_writebyte
-                  0x0047fa                  _wizchip_spi_readbyte
-                  0x004802                  _wizchip_spi_writebyte
-                  0x00480a                  _reg_wizchip_cris_cbfunc
-                  0x004832                  _reg_wizchip_cs_cbfunc
-                  0x00485a                  _reg_wizchip_bus_cbfunc
-                  0x00488e                  _reg_wizchip_spi_cbfunc
-                  0x0048c2                  _ctlwizchip
-                  0x004a04                  _ctlnetwork
-                  0x004a62                  _wizchip_sw_reset
-                  0x004ace                  _wizchip_init
-                  0x004b94                  _wizchip_clrinterrupt
-                  0x004bba                  _wizchip_getinterrupt
-                  0x004bf0                  _wizchip_setinterruptmask
-                  0x004c12                  _wizchip_getinterruptmask
-                  0x004c46                  _wizphy_getphylink
-                  0x004c68                  _wizphy_getphypmode
-                  0x004c8e                  _wizphy_reset
-                  0x004cba                  _wizphy_setphyconf
-                  0x004d14                  _wizphy_getphyconf
-                  0x004da6                  _wizphy_getphystat
-                  0x004dda                  _wizphy_setphypmode
-                  0x004e46                  _wizchip_setnetinfo
-                  0x004eaa                  _wizchip_getnetinfo
-                  0x004f0e                  _wizchip_setnetmode
-                  0x004f3c                  _wizchip_getnetmode
-                  0x004f48                  _wizchip_settimeout
-                  0x004f7a                  _wizchip_gettimeout
-                  0x004faa                  _WIZCHIP_READ
-                  0x005030                  _WIZCHIP_WRITE
-                  0x0050b2                  _WIZCHIP_READ_BUF
-                  0x00515e                  _WIZCHIP_WRITE_BUF
-                  0x005210                  _getSn_TX_FSR
-                  0x005296                  _getSn_RX_RSR
-                  0x00531c                  _wiz_send_data
-                  0x0053d4                  _wiz_recv_data
-                  0x00548c                  _wiz_recv_ignore
-                  0x005648                  _SetAdc1
-                  0x0056c8                  _SetTmr3
-                  0x0056de                  _SetTmr1
-                  0x0056f4                  __AD1Interrupt
-                  0x00573a                  _Delay
-                  0x005756                  _Delay_Us
+                  0x003f44                  _CommandPoll
+                  0x004396                  _wizchip_select
+                  0x00439e                  _wizchip_deselect
+                  0x0043a6                  _wizchip_write
+                  0x0043c2                  _wizchip_read
+                  0x0043d8                  _network_init
+                  0x0044c8                  _tcps
+                  0x0045e0                  _platform_init
+                  0x004660                  _InitSPI2
+                  0x004682                  _ConfigureOscillator
+                  0x0046d8                  __T1Interrupt
+                  0x004728                  _SetTmr5
+                  0x004748                  __T5Interrupt
+                  0x004782                  _my_ip_assign
+                  0x0047aa                  _my_ip_conflict
+                  0x0047b2                  _initDma1and2
+                  0x0047f8                  _wizchip_cris_enter
+                  0x0047fe                  _wizchip_cris_exit
+                  0x004804                  _wizchip_cs_select
+                  0x00480a                  _wizchip_cs_deselect
+                  0x004810                  _wizchip_bus_readbyte
+                  0x004828                  _wizchip_bus_writebyte
+                  0x004844                  _wizchip_spi_readbyte
+                  0x00484c                  _wizchip_spi_writebyte
+                  0x004854                  _reg_wizchip_cris_cbfunc
+                  0x00487c                  _reg_wizchip_cs_cbfunc
+                  0x0048a4                  _reg_wizchip_bus_cbfunc
+                  0x0048d8                  _reg_wizchip_spi_cbfunc
+                  0x00490c                  _ctlwizchip
+                  0x004a4e                  _ctlnetwork
+                  0x004aac                  _wizchip_sw_reset
+                  0x004b18                  _wizchip_init
+                  0x004bde                  _wizchip_clrinterrupt
+                  0x004c04                  _wizchip_getinterrupt
+                  0x004c3a                  _wizchip_setinterruptmask
+                  0x004c5c                  _wizchip_getinterruptmask
+                  0x004c90                  _wizphy_getphylink
+                  0x004cb2                  _wizphy_getphypmode
+                  0x004cd8                  _wizphy_reset
+                  0x004d04                  _wizphy_setphyconf
+                  0x004d5e                  _wizphy_getphyconf
+                  0x004df0                  _wizphy_getphystat
+                  0x004e24                  _wizphy_setphypmode
+                  0x004e90                  _wizchip_setnetinfo
+                  0x004ef4                  _wizchip_getnetinfo
+                  0x004f58                  _wizchip_setnetmode
+                  0x004f86                  _wizchip_getnetmode
+                  0x004f92                  _wizchip_settimeout
+                  0x004fc4                  _wizchip_gettimeout
+                  0x004ff4                  _WIZCHIP_READ
+                  0x00507a                  _WIZCHIP_WRITE
+                  0x0050fc                  _WIZCHIP_READ_BUF
+                  0x0051a8                  _WIZCHIP_WRITE_BUF
+                  0x005278                  _getSn_TX_FSR
+                  0x0052fe                  _getSn_RX_RSR
+                  0x005384                  _wiz_send_data
+                  0x00543c                  _wiz_recv_data
+                  0x0054f4                  _wiz_recv_ignore
+                  0x005566                  __DMA1Interrupt
+                  0x00556e                  __DMA2Interrupt
+                  0x0056ca                  _SetAdc1
+                  0x00574a                  _SetTmr3
+                  0x005760                  _SetTmr1
+                  0x005776                  __AD1Interrupt
+                  0x0057ae                  ___delay32
 
 External Symbols in Program Memory (by name):
 
-                  0x003f3e                  _CommandPoll
-                  0x00467e                  _ConfigureOscillator
+                  0x003f44                  _CommandPoll
+                  0x004682                  _ConfigureOscillator
                   0x002b4e                  _DHCP_init
                   0x002884                  _DHCP_run
                   0x002a4a                  _DHCP_stop
                   0x002c0c                  _DHCP_time_handler
-                  0x00573a                  _Delay
-                  0x005756                  _Delay_Us
-                  0x00465c                  _InitSPI2
-                  0x005648                  _SetAdc1
-                  0x0056de                  _SetTmr1
-                  0x0056c8                  _SetTmr3
-                  0x004724                  _SetTmr5
-                  0x004faa                  _WIZCHIP_READ
-                  0x0050b2                  _WIZCHIP_READ_BUF
-                  0x005030                  _WIZCHIP_WRITE
-                  0x00515e                  _WIZCHIP_WRITE_BUF
-                  0x0056f4                  __AD1Interrupt
+                  0x004660                  _InitSPI2
+                  0x0056ca                  _SetAdc1
+                  0x005760                  _SetTmr1
+                  0x00574a                  _SetTmr3
+                  0x004728                  _SetTmr5
+                  0x004ff4                  _WIZCHIP_READ
+                  0x0050fc                  _WIZCHIP_READ_BUF
+                  0x00507a                  _WIZCHIP_WRITE
+                  0x0051a8                  _WIZCHIP_WRITE_BUF
+                  0x005776                  __AD1Interrupt
                   0x00032a                  __AddressError
+                  0x005566                  __DMA1Interrupt
+                  0x00556e                  __DMA2Interrupt
                   0x00033c                  __DMACError
                   0x000342                  __DefaultInterrupt
                   0x000346                  __HardTrapError
@@ -538,10 +546,11 @@ External Symbols in Program Memory (by name):
                   0x000324                  __OscillatorFail
                   0x00034a                  __SoftTrapError
                   0x000330                  __StackError
-                  0x0046d4                  __T1Interrupt
-                  0x004744                  __T5Interrupt
+                  0x0046d8                  __T1Interrupt
+                  0x004748                  __T5Interrupt
                   0x0003aa                  ___adddf3
                   0x0004a6                  ___addsf3
+                  0x0057ae                  ___delay32
                   0x000560                  ___divdf3
                   0x0016c8                  ___divdi3
                   0x000614                  ___divsf3
@@ -600,9 +609,9 @@ External Symbols in Program Memory (by name):
                   0x002a5c                  _check_DHCP_timeout
                   0x002e3c                  _close
                   0x002f58                  _connect
-                  0x004a04                  _ctlnetwork
+                  0x004a4e                  _ctlnetwork
                   0x003910                  _ctlsocket
-                  0x0048c2                  _ctlwizchip
+                  0x00490c                  _ctlwizchip
                   0x0019a2                  _default_ip_assign
                   0x0019e2                  _default_ip_conflict
                   0x0019c6                  _default_ip_update
@@ -614,26 +623,27 @@ External Symbols in Program Memory (by name):
                   0x002c48                  _getGWfromDHCP
                   0x002c1e                  _getIPfromDHCP
                   0x002c72                  _getSNfromDHCP
-                  0x005296                  _getSn_RX_RSR
-                  0x005210                  _getSn_TX_FSR
+                  0x0052fe                  _getSn_RX_RSR
+                  0x005278                  _getSn_TX_FSR
                   0x003bea                  _getsockopt
+                  0x0047b2                  _initDma1and2
                   0x002ec4                  _listen
                   0x003d88                  _main
                   0x001a32                  _makeDHCPMSG
-                  0x00477e                  _my_ip_assign
-                  0x0047a6                  _my_ip_conflict
-                  0x0043d4                  _network_init
+                  0x004782                  _my_ip_assign
+                  0x0047aa                  _my_ip_conflict
+                  0x0043d8                  _network_init
                   0x00261e                  _parseDHCPMSG
-                  0x0045dc                  _platform_init
+                  0x0045e0                  _platform_init
                   0x000d5e                  _puts
                   0x000d80                  _rand
                   0x0032b2                  _recv
                   0x0035cc                  _recvfrom
                   0x0019fc                  _reg_dhcp_cbfunc
-                  0x00485a                  _reg_wizchip_bus_cbfunc
-                  0x00480a                  _reg_wizchip_cris_cbfunc
-                  0x004832                  _reg_wizchip_cs_cbfunc
-                  0x00488e                  _reg_wizchip_spi_cbfunc
+                  0x0048a4                  _reg_wizchip_bus_cbfunc
+                  0x004854                  _reg_wizchip_cris_cbfunc
+                  0x00487c                  _reg_wizchip_cs_cbfunc
+                  0x0048d8                  _reg_wizchip_spi_cbfunc
                   0x002bf2                  _reset_DHCP_timeout
                   0x00311e                  _send
                   0x002378                  _send_DHCP_DECLINE
@@ -644,41 +654,41 @@ External Symbols in Program Memory (by name):
                   0x0009ca                  _sinf
                   0x002cd0                  _socket
                   0x000d72                  _srand
-                  0x0044c4                  _tcps
-                  0x0053d4                  _wiz_recv_data
-                  0x00548c                  _wiz_recv_ignore
-                  0x00531c                  _wiz_send_data
-                  0x0047c6                  _wizchip_bus_readbyte
-                  0x0047de                  _wizchip_bus_writebyte
-                  0x004b94                  _wizchip_clrinterrupt
-                  0x0047ae                  _wizchip_cris_enter
-                  0x0047b4                  _wizchip_cris_exit
-                  0x0047c0                  _wizchip_cs_deselect
-                  0x0047ba                  _wizchip_cs_select
-                  0x00439a                  _wizchip_deselect
-                  0x004bba                  _wizchip_getinterrupt
-                  0x004c12                  _wizchip_getinterruptmask
-                  0x004eaa                  _wizchip_getnetinfo
-                  0x004f3c                  _wizchip_getnetmode
-                  0x004f7a                  _wizchip_gettimeout
-                  0x004ace                  _wizchip_init
-                  0x0043be                  _wizchip_read
-                  0x004392                  _wizchip_select
-                  0x004bf0                  _wizchip_setinterruptmask
-                  0x004e46                  _wizchip_setnetinfo
-                  0x004f0e                  _wizchip_setnetmode
-                  0x004f48                  _wizchip_settimeout
-                  0x0047fa                  _wizchip_spi_readbyte
-                  0x004802                  _wizchip_spi_writebyte
-                  0x004a62                  _wizchip_sw_reset
-                  0x0043a2                  _wizchip_write
-                  0x004d14                  _wizphy_getphyconf
-                  0x004c46                  _wizphy_getphylink
-                  0x004c68                  _wizphy_getphypmode
-                  0x004da6                  _wizphy_getphystat
-                  0x004c8e                  _wizphy_reset
-                  0x004cba                  _wizphy_setphyconf
-                  0x004dda                  _wizphy_setphypmode
+                  0x0044c8                  _tcps
+                  0x00543c                  _wiz_recv_data
+                  0x0054f4                  _wiz_recv_ignore
+                  0x005384                  _wiz_send_data
+                  0x004810                  _wizchip_bus_readbyte
+                  0x004828                  _wizchip_bus_writebyte
+                  0x004bde                  _wizchip_clrinterrupt
+                  0x0047f8                  _wizchip_cris_enter
+                  0x0047fe                  _wizchip_cris_exit
+                  0x00480a                  _wizchip_cs_deselect
+                  0x004804                  _wizchip_cs_select
+                  0x00439e                  _wizchip_deselect
+                  0x004c04                  _wizchip_getinterrupt
+                  0x004c5c                  _wizchip_getinterruptmask
+                  0x004ef4                  _wizchip_getnetinfo
+                  0x004f86                  _wizchip_getnetmode
+                  0x004fc4                  _wizchip_gettimeout
+                  0x004b18                  _wizchip_init
+                  0x0043c2                  _wizchip_read
+                  0x004396                  _wizchip_select
+                  0x004c3a                  _wizchip_setinterruptmask
+                  0x004e90                  _wizchip_setnetinfo
+                  0x004f58                  _wizchip_setnetmode
+                  0x004f92                  _wizchip_settimeout
+                  0x004844                  _wizchip_spi_readbyte
+                  0x00484c                  _wizchip_spi_writebyte
+                  0x004aac                  _wizchip_sw_reset
+                  0x0043a6                  _wizchip_write
+                  0x004d5e                  _wizphy_getphyconf
+                  0x004c90                  _wizphy_getphylink
+                  0x004cb2                  _wizphy_getphypmode
+                  0x004df0                  _wizphy_getphystat
+                  0x004cd8                  _wizphy_reset
+                  0x004d04                  _wizphy_setphyconf
+                  0x004e24                  _wizphy_setphypmode
 
 Memory Configuration
 
@@ -706,7 +716,6 @@ LOAD build/dsPIC33EP512MC502/production/interrupts.o
 LOAD build/dsPIC33EP512MC502/production/main.o
 LOAD build/dsPIC33EP512MC502/production/traps.o
 LOAD build/dsPIC33EP512MC502/production/user.o
-LOAD build/dsPIC33EP512MC502/production/delay.o
 LOAD build/dsPIC33EP512MC502/production/socket.o
 LOAD build/dsPIC33EP512MC502/production/w5500.o
 LOAD build/dsPIC33EP512MC502/production/wizchip_conf.o
@@ -946,64 +955,59 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x7826
+.debug_info       0x000000       0x85f0
  *(.debug_info)
- .debug_info      0x000000        0x149 build/dsPIC33EP512MC502/production/interrupts.o
- .debug_info      0x000149       0x2d46 build/dsPIC33EP512MC502/production/main.o
- .debug_info      0x002e8f        0x3bb build/dsPIC33EP512MC502/production/traps.o
- .debug_info      0x00324a       0x161d build/dsPIC33EP512MC502/production/user.o
- .debug_info      0x004867        0x155 build/dsPIC33EP512MC502/production/delay.o
- .debug_info      0x0049bc        0x84e build/dsPIC33EP512MC502/production/socket.o
- .debug_info      0x00520a        0x64d build/dsPIC33EP512MC502/production/w5500.o
- .debug_info      0x005857       0x10ba build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_info      0x006911        0xf15 build/dsPIC33EP512MC502/production/dhcp.o
+ .debug_info      0x000000        0x15e build/dsPIC33EP512MC502/production/interrupts.o
+ .debug_info      0x00015e       0x3124 build/dsPIC33EP512MC502/production/main.o
+ .debug_info      0x003282        0x3d0 build/dsPIC33EP512MC502/production/traps.o
+ .debug_info      0x003652       0x14a4 build/dsPIC33EP512MC502/production/user.o
+ .debug_info      0x004af6        0x863 build/dsPIC33EP512MC502/production/socket.o
+ .debug_info      0x005359       0x129e build/dsPIC33EP512MC502/production/w5500.o
+ .debug_info      0x0065f7       0x10cf build/dsPIC33EP512MC502/production/wizchip_conf.o
+ .debug_info      0x0076c6        0xf2a build/dsPIC33EP512MC502/production/dhcp.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x9ab
+.debug_abbrev     0x000000        0xa23
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0x1f build/dsPIC33EP512MC502/production/interrupts.o
  .debug_abbrev    0x00001f        0x212 build/dsPIC33EP512MC502/production/main.o
  .debug_abbrev    0x000231         0x7d build/dsPIC33EP512MC502/production/traps.o
  .debug_abbrev    0x0002ae         0xf9 build/dsPIC33EP512MC502/production/user.o
- .debug_abbrev    0x0003a7         0x67 build/dsPIC33EP512MC502/production/delay.o
- .debug_abbrev    0x00040e         0xfd build/dsPIC33EP512MC502/production/socket.o
- .debug_abbrev    0x00050b        0x134 build/dsPIC33EP512MC502/production/w5500.o
- .debug_abbrev    0x00063f        0x22b build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_abbrev    0x00086a        0x141 build/dsPIC33EP512MC502/production/dhcp.o
+ .debug_abbrev    0x0003a7         0xfd build/dsPIC33EP512MC502/production/socket.o
+ .debug_abbrev    0x0004a4        0x213 build/dsPIC33EP512MC502/production/w5500.o
+ .debug_abbrev    0x0006b7        0x22b build/dsPIC33EP512MC502/production/wizchip_conf.o
+ .debug_abbrev    0x0008e2        0x141 build/dsPIC33EP512MC502/production/dhcp.o
 
-.debug_line       0x000000        0xcf6
+.debug_line       0x000000        0xd31
  *(.debug_line)
  .debug_line      0x000000         0x1a build/dsPIC33EP512MC502/production/interrupts.o
- .debug_line      0x00001a        0x290 build/dsPIC33EP512MC502/production/main.o
- .debug_line      0x0002aa         0xab build/dsPIC33EP512MC502/production/traps.o
- .debug_line      0x000355         0xcc build/dsPIC33EP512MC502/production/user.o
- .debug_line      0x000421         0x47 build/dsPIC33EP512MC502/production/delay.o
- .debug_line      0x000468        0x284 build/dsPIC33EP512MC502/production/socket.o
- .debug_line      0x0006ec        0x125 build/dsPIC33EP512MC502/production/w5500.o
- .debug_line      0x000811        0x1e3 build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_line      0x0009f4        0x302 build/dsPIC33EP512MC502/production/dhcp.o
+ .debug_line      0x00001a        0x2a3 build/dsPIC33EP512MC502/production/main.o
+ .debug_line      0x0002bd         0xab build/dsPIC33EP512MC502/production/traps.o
+ .debug_line      0x000368         0xc9 build/dsPIC33EP512MC502/production/user.o
+ .debug_line      0x000431        0x284 build/dsPIC33EP512MC502/production/socket.o
+ .debug_line      0x0006b5        0x197 build/dsPIC33EP512MC502/production/w5500.o
+ .debug_line      0x00084c        0x1e3 build/dsPIC33EP512MC502/production/wizchip_conf.o
+ .debug_line      0x000a2f        0x302 build/dsPIC33EP512MC502/production/dhcp.o
 
-.debug_frame      0x000000        0xd04
+.debug_frame      0x000000        0xd14
  *(.debug_frame)
- .debug_frame     0x000000        0x262 build/dsPIC33EP512MC502/production/main.o
- .debug_frame     0x000262         0xf4 build/dsPIC33EP512MC502/production/traps.o
- .debug_frame     0x000356         0x96 build/dsPIC33EP512MC502/production/user.o
- .debug_frame     0x0003ec         0x4c build/dsPIC33EP512MC502/production/delay.o
- .debug_frame     0x000438        0x176 build/dsPIC33EP512MC502/production/socket.o
- .debug_frame     0x0005ae        0x134 build/dsPIC33EP512MC502/production/w5500.o
- .debug_frame     0x0006e2        0x3c2 build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_frame     0x000aa4        0x260 build/dsPIC33EP512MC502/production/dhcp.o
+ .debug_frame     0x000000        0x27e build/dsPIC33EP512MC502/production/main.o
+ .debug_frame     0x00027e         0xf4 build/dsPIC33EP512MC502/production/traps.o
+ .debug_frame     0x000372         0x96 build/dsPIC33EP512MC502/production/user.o
+ .debug_frame     0x000408        0x176 build/dsPIC33EP512MC502/production/socket.o
+ .debug_frame     0x00057e        0x174 build/dsPIC33EP512MC502/production/w5500.o
+ .debug_frame     0x0006f2        0x3c2 build/dsPIC33EP512MC502/production/wizchip_conf.o
+ .debug_frame     0x000ab4        0x260 build/dsPIC33EP512MC502/production/dhcp.o
 
-.debug_str        0x000000        0x39d
+.debug_str        0x000000        0x42c
  *(.debug_str)
- .debug_str       0x000000        0x155 build/dsPIC33EP512MC502/production/main.o
- .debug_str       0x000155          0xc build/dsPIC33EP512MC502/production/traps.o
- .debug_str       0x000161         0xd3 build/dsPIC33EP512MC502/production/user.o
- .debug_str       0x000234          0xb build/dsPIC33EP512MC502/production/delay.o
- .debug_str       0x00023f          0x9 build/dsPIC33EP512MC502/production/socket.o
- .debug_str       0x000248         0x1f build/dsPIC33EP512MC502/production/w5500.o
- .debug_str       0x000267         0x28 build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_str       0x00028f        0x10e build/dsPIC33EP512MC502/production/dhcp.o
+ .debug_str       0x000000        0x191 build/dsPIC33EP512MC502/production/main.o
+ .debug_str       0x000191          0xc build/dsPIC33EP512MC502/production/traps.o
+ .debug_str       0x00019d         0xca build/dsPIC33EP512MC502/production/user.o
+ .debug_str       0x000267          0x9 build/dsPIC33EP512MC502/production/socket.o
+ .debug_str       0x000270         0x86 build/dsPIC33EP512MC502/production/w5500.o
+ .debug_str       0x0002f6         0x28 build/dsPIC33EP512MC502/production/wizchip_conf.o
+ .debug_str       0x00031e        0x10e build/dsPIC33EP512MC502/production/dhcp.o
 
 .debug_loc
  *(.debug_loc)
@@ -1012,29 +1016,27 @@ __FUID3
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0xb55
+                  0x000000        0xb5d
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000        0x2af build/dsPIC33EP512MC502/production/main.o
+                  0x000000        0x2c0 build/dsPIC33EP512MC502/production/main.o
  .debug_pubnames
-                  0x0002af         0xa2 build/dsPIC33EP512MC502/production/traps.o
+                  0x0002c0         0xa2 build/dsPIC33EP512MC502/production/traps.o
  .debug_pubnames
-                  0x000351         0x48 build/dsPIC33EP512MC502/production/user.o
+                  0x000362         0x48 build/dsPIC33EP512MC502/production/user.o
  .debug_pubnames
-                  0x000399         0x38 build/dsPIC33EP512MC502/production/delay.o
+                  0x0003aa         0xa3 build/dsPIC33EP512MC502/production/socket.o
  .debug_pubnames
-                  0x0003d1         0xa3 build/dsPIC33EP512MC502/production/socket.o
+                  0x00044d         0xe9 build/dsPIC33EP512MC502/production/w5500.o
  .debug_pubnames
-                  0x000474         0xba build/dsPIC33EP512MC502/production/w5500.o
+                  0x000536        0x31c build/dsPIC33EP512MC502/production/wizchip_conf.o
  .debug_pubnames
-                  0x00052e        0x31c build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_pubnames
-                  0x00084a        0x30b build/dsPIC33EP512MC502/production/dhcp.o
+                  0x000852        0x30b build/dsPIC33EP512MC502/production/dhcp.o
 
 .debug_ranges
  *(.debug_ranges)
 
-.debug_aranges    0x000000         0xc0
+.debug_aranges    0x000000         0xa8
  *(.debug_aranges)
  .debug_aranges
                   0x000000         0x18 build/dsPIC33EP512MC502/production/main.o
@@ -1043,15 +1045,13 @@ __FUID3
  .debug_aranges
                   0x000030         0x18 build/dsPIC33EP512MC502/production/user.o
  .debug_aranges
-                  0x000048         0x18 build/dsPIC33EP512MC502/production/delay.o
+                  0x000048         0x18 build/dsPIC33EP512MC502/production/socket.o
  .debug_aranges
-                  0x000060         0x18 build/dsPIC33EP512MC502/production/socket.o
+                  0x000060         0x18 build/dsPIC33EP512MC502/production/w5500.o
  .debug_aranges
-                  0x000078         0x18 build/dsPIC33EP512MC502/production/w5500.o
+                  0x000078         0x18 build/dsPIC33EP512MC502/production/wizchip_conf.o
  .debug_aranges
-                  0x000090         0x18 build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_aranges
-                  0x0000a8         0x18 build/dsPIC33EP512MC502/production/dhcp.o
+                  0x000090         0x18 build/dsPIC33EP512MC502/production/dhcp.o
                     0x0000                  WREG0 = 0x0
                     0x0000                  _WREG0 = 0x0
                     0x0002                  WREG1 = 0x2
@@ -2354,144 +2354,142 @@ LOAD data_init
 LOAD shared_data_init
 
 .debug_pubtypes
-                  0x0000c0        0x7a8
+                  0x0000a8        0x8c1
  .debug_pubtypes
-                  0x0000c0         0x12 build/dsPIC33EP512MC502/production/interrupts.o
+                  0x0000a8         0x12 build/dsPIC33EP512MC502/production/interrupts.o
  .debug_pubtypes
-                  0x0000d2        0x2f6 build/dsPIC33EP512MC502/production/main.o
+                  0x0000ba        0x33c build/dsPIC33EP512MC502/production/main.o
  .debug_pubtypes
-                  0x0003c8         0x35 build/dsPIC33EP512MC502/production/traps.o
+                  0x0003f6         0x35 build/dsPIC33EP512MC502/production/traps.o
  .debug_pubtypes
-                  0x0003fd        0x1f7 build/dsPIC33EP512MC502/production/user.o
+                  0x00042b        0x1da build/dsPIC33EP512MC502/production/user.o
  .debug_pubtypes
-                  0x0005f4         0x12 build/dsPIC33EP512MC502/production/delay.o
+                  0x000605         0x71 build/dsPIC33EP512MC502/production/socket.o
  .debug_pubtypes
-                  0x000606         0x71 build/dsPIC33EP512MC502/production/socket.o
+                  0x000676        0x167 build/dsPIC33EP512MC502/production/w5500.o
  .debug_pubtypes
-                  0x000677         0x65 build/dsPIC33EP512MC502/production/w5500.o
+                  0x0007dd        0x131 build/dsPIC33EP512MC502/production/wizchip_conf.o
  .debug_pubtypes
-                  0x0006dc        0x131 build/dsPIC33EP512MC502/production/wizchip_conf.o
- .debug_pubtypes
-                  0x00080d         0x5b build/dsPIC33EP512MC502/production/dhcp.o
+                  0x00090e         0x5b build/dsPIC33EP512MC502/production/dhcp.o
 
 __c30_signature
-                  0x000868        0x15c
+                  0x000969        0x15c
  __c30_signature
-                  0x000868          0x6 build/dsPIC33EP512MC502/production/interrupts.o
+                  0x000969          0x6 build/dsPIC33EP512MC502/production/interrupts.o
  __c30_signature
-                  0x00086e          0x6 build/dsPIC33EP512MC502/production/main.o
+                  0x00096f          0x6 build/dsPIC33EP512MC502/production/main.o
  __c30_signature
-                  0x000874          0x6 build/dsPIC33EP512MC502/production/traps.o
+                  0x000975          0x6 build/dsPIC33EP512MC502/production/traps.o
  __c30_signature
-                  0x00087a          0x6 build/dsPIC33EP512MC502/production/user.o
+                  0x00097b          0x6 build/dsPIC33EP512MC502/production/user.o
  __c30_signature
-                  0x000880          0x6 build/dsPIC33EP512MC502/production/delay.o
+                  0x000981          0x6 build/dsPIC33EP512MC502/production/socket.o
  __c30_signature
-                  0x000886          0x6 build/dsPIC33EP512MC502/production/socket.o
+                  0x000987          0x6 build/dsPIC33EP512MC502/production/w5500.o
  __c30_signature
-                  0x00088c          0x6 build/dsPIC33EP512MC502/production/w5500.o
+                  0x00098d          0x6 build/dsPIC33EP512MC502/production/wizchip_conf.o
  __c30_signature
-                  0x000892          0x6 build/dsPIC33EP512MC502/production/wizchip_conf.o
+                  0x000993          0x6 build/dsPIC33EP512MC502/production/dhcp.o
  __c30_signature
-                  0x000898          0x6 build/dsPIC33EP512MC502/production/dhcp.o
+                  0x000999          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(crt0_extendedep.o)
  __c30_signature
-                  0x00089e          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(crt0_extendedep.o)
+                  0x00099f          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(data_init_extendedep.o)
  __c30_signature
-                  0x0008a4          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(data_init_extendedep.o)
+                  0x0009a5          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(delay32ep.eo)
  __c30_signature
-                  0x0008aa          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(adddf3.epeo)
+                  0x0009ab          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(adddf3.epeo)
  __c30_signature
-                  0x0008b0          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(addsf3.epeo)
+                  0x0009b1          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(addsf3.epeo)
  __c30_signature
-                  0x0008b6          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divdf3.epeo)
+                  0x0009b7          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divdf3.epeo)
  __c30_signature
-                  0x0008bc          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divsf3.epeo)
+                  0x0009bd          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divsf3.epeo)
  __c30_signature
-                  0x0008c2          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divsi3.epeo)
+                  0x0009c3          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divsi3.epeo)
  __c30_signature
-                  0x0008c8          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dpack.epeo)
+                  0x0009c9          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dpack.epeo)
  __c30_signature
-                  0x0008ce          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dunpack2.epeo)
+                  0x0009cf          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dunpack2.epeo)
  __c30_signature
-                  0x0008d4          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fixunsdfsi.epeo)
+                  0x0009d5          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fixunsdfsi.epeo)
  __c30_signature
-                  0x0008da          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fixunssfsi.epeo)
+                  0x0009db          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fixunssfsi.epeo)
  __c30_signature
-                  0x0008e0          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatsidf.epeo)
+                  0x0009e1          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatsidf.epeo)
  __c30_signature
-                  0x0008e6          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatsisf.epeo)
+                  0x0009e7          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatsisf.epeo)
  __c30_signature
-                  0x0008ec          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatunsidf.epeo)
+                  0x0009ed          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatunsidf.epeo)
  __c30_signature
-                  0x0008f2          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fpack.epeo)
+                  0x0009f3          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fpack.epeo)
  __c30_signature
-                  0x0008f8          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(funpack.epeo)
+                  0x0009f9          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(funpack.epeo)
  __c30_signature
-                  0x0008fe          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(funpack2.epeo)
+                  0x0009ff          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(funpack2.epeo)
  __c30_signature
-                  0x000904          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(futil.epeo)
+                  0x000a05          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(futil.epeo)
  __c30_signature
-                  0x00090a          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(muldf3.epeo)
+                  0x000a0b          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(muldf3.epeo)
  __c30_signature
-                  0x000910          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(mulsf3.epeo)
+                  0x000a11          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(mulsf3.epeo)
  __c30_signature
-                  0x000916          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(sinf.epeo)
+                  0x000a17          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(sinf.epeo)
  __c30_signature
-                  0x00091c          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(udivsi3.epeo)
+                  0x000a1d          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(udivsi3.epeo)
  __c30_signature
-                  0x000922          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(umodsi3.epeo)
+                  0x000a23          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(umodsi3.epeo)
  __c30_signature
-                  0x000928          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dpropagateNaN.epeo)
+                  0x000a29          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dpropagateNaN.epeo)
  __c30_signature
-                  0x00092e          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dunpack.epeo)
+                  0x000a2f          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(dunpack.epeo)
  __c30_signature
-                  0x000934          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatdidf.epeo)
+                  0x000a35          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatdidf.epeo)
  __c30_signature
-                  0x00093a          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatdisf.epeo)
+                  0x000a3b          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatdisf.epeo)
  __c30_signature
-                  0x000940          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatundidf.epeo)
+                  0x000a41          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatundidf.epeo)
  __c30_signature
-                  0x000946          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatundisf.epeo)
+                  0x000a47          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(floatundisf.epeo)
  __c30_signature
-                  0x00094c          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(sincosf.epeo)
+                  0x000a4d          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(sincosf.epeo)
  __c30_signature
-                  0x000952          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(errno.epeo)
+                  0x000a53          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(errno.epeo)
  __c30_signature
-                  0x000958          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(feqltle.epeo)
+                  0x000a59          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(feqltle.epeo)
  __c30_signature
-                  0x00095e          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fixsfsi.epeo)
+                  0x000a5f          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fixsfsi.epeo)
  __c30_signature
-                  0x000964          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fmodf.epeo)
+                  0x000a65          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fmodf.epeo)
  __c30_signature
-                  0x00096a          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fmodrem.epeo)
+                  0x000a6b          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fmodrem.epeo)
  __c30_signature
-                  0x000970          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fcompare.epeo)
+                  0x000a71          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(fcompare.epeo)
  __c30_signature
-                  0x000976          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(puts.epeo)
+                  0x000a77          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(puts.epeo)
  __c30_signature
-                  0x00097c          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(rand.epeo)
+                  0x000a7d          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(rand.epeo)
  __c30_signature
-                  0x000982          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(_iob.epeo)
+                  0x000a83          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(_iob.epeo)
  __c30_signature
-                  0x000988          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(printf_cdnopsuxX.EPeo)
+                  0x000a89          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(printf_cdnopsuxX.EPeo)
  __c30_signature
-                  0x00098e          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(fputc.epeo)
+                  0x000a8f          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(fputc.epeo)
  __c30_signature
-                  0x000994          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(doprnt_cdnopsuxX.EPeo)
+                  0x000a95          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(doprnt_cdnopsuxX.EPeo)
  __c30_signature
-                  0x00099a          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(flsbuf.epeo)
+                  0x000a9b          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(flsbuf.epeo)
  __c30_signature
-                  0x0009a0          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(writeep.eo)
+                  0x000aa1          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(writeep.eo)
  __c30_signature
-                  0x0009a6          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(c30_uartep.eo)
+                  0x000aa7          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(c30_uartep.eo)
  __c30_signature
-                  0x0009ac          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(mulsi3.epeo)
+                  0x000aad          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(mulsi3.epeo)
  __c30_signature
-                  0x0009b2          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divmoddi3.epeo)
+                  0x000ab3          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(divmoddi3.epeo)
  __c30_signature
-                  0x0009b8          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(muldi3.epeo)
+                  0x000ab9          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(muldi3.epeo)
  __c30_signature
-                  0x0009be          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(umuldi3.epeo)
+                  0x000abf          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(umuldi3.epeo)
 
 .nbss               0x1000          0x2
  .nbss              0x1000          0x2 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libm-elf.a(errno.epeo)
@@ -2570,24 +2568,28 @@ __c30_signature
  .data              0x1f24         0x14 build/dsPIC33EP512MC502/production/wizchip_conf.o
                     0x1f24                  _WIZCHIP
 
-.bss                0x1f38         0x14
+.bss                0x1f38         0x12
  .bss               0x1f38          0x6 build/dsPIC33EP512MC502/production/wizchip_conf.o
  .bss               0x1f3e          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(rand.epeo)
  .bss               0x1f44          0x6 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libc-elf.a(_iob.epeo)
                     0x1f44                  __outdone
                     0x1f45                  __sibuf
                     0x1f47                  __sobuf
- .bss               0x1f4a          0x2 build/dsPIC33EP512MC502/production/delay.o
-                    0x1f4a                  _temp_count
 
-.data               0x1f4c          0x4
- .data              0x1f4c          0x2 build/dsPIC33EP512MC502/production/socket.o
+.data               0x1f4a          0x2
+ .data              0x1f4a          0x2 build/dsPIC33EP512MC502/production/socket.o
+
+.bss                0x1f4c          0x2
+ .bss               0x1f4c          0x2 build/dsPIC33EP512MC502/production/w5500.o
+                    0x1f4c                  _done
+
+.data               0x1f4e          0x2
  .data              0x1f4e          0x2 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(c30_uartep.eo)
                     0x1f4e                  ___C30_UART
 
-_03EC8F605860e340
+_03E6F9C0587d37ba
                     0x2bf0       0xa410
- _03EC8F605860e340
+ _03E6F9C0587d37ba
                     0x2bf0       0xa410 build/dsPIC33EP512MC502/production/main.o
                     0x2bf0                  _MainBuffer
 
@@ -2641,11 +2643,21 @@ _03EC8F605860e340
  .ivt._AD1Interrupt
                   0x00002e          0x2 build/dsPIC33EP512MC502/production/user.o
 
+.ivt._DMA1Interrupt
+                  0x000030          0x2
+ .ivt._DMA1Interrupt
+                  0x000030          0x2 build/dsPIC33EP512MC502/production/w5500.o
+
+.ivt._DMA2Interrupt
+                  0x000044          0x2
+ .ivt._DMA2Interrupt
+                  0x000044          0x2 build/dsPIC33EP512MC502/production/w5500.o
+
 .const              0x981a        0x188 load address 0x00181a  
  .const             0x981a        0x176 build/dsPIC33EP512MC502/production/main.o
  .const             0x9990         0x12 build/dsPIC33EP512MC502/production/dhcp.o
 
-.text             0x0019a2       0x3b5c
+.text             0x0019a2       0x3bde
  .text            0x0019a2       0x132e build/dsPIC33EP512MC502/production/dhcp.o
                   0x0019a2                  _default_ip_assign
                   0x0019c6                  _default_ip_update
@@ -2681,80 +2693,84 @@ _03EC8F605860e340
                   0x003910                  _ctlsocket
                   0x003a58                  _setsockopt
                   0x003bea                  _getsockopt
- .text            0x003d88        0xa26 build/dsPIC33EP512MC502/production/main.o
+ .text            0x003d88        0xa70 build/dsPIC33EP512MC502/production/main.o
                   0x003d88                  _main
-                  0x003f3e                  _CommandPoll
-                  0x004392                  _wizchip_select
-                  0x00439a                  _wizchip_deselect
-                  0x0043a2                  _wizchip_write
-                  0x0043be                  _wizchip_read
-                  0x0043d4                  _network_init
-                  0x0044c4                  _tcps
-                  0x0045dc                  _platform_init
-                  0x00465c                  _InitSPI2
-                  0x00467e                  _ConfigureOscillator
-                  0x0046d4                  __T1Interrupt
-                  0x004724                  _SetTmr5
-                  0x004744                  __T5Interrupt
-                  0x00477e                  _my_ip_assign
-                  0x0047a6                  _my_ip_conflict
- .text            0x0047ae        0x7fc build/dsPIC33EP512MC502/production/wizchip_conf.o
-                  0x0047ae                  _wizchip_cris_enter
-                  0x0047b4                  _wizchip_cris_exit
-                  0x0047ba                  _wizchip_cs_select
-                  0x0047c0                  _wizchip_cs_deselect
-                  0x0047c6                  _wizchip_bus_readbyte
-                  0x0047de                  _wizchip_bus_writebyte
-                  0x0047fa                  _wizchip_spi_readbyte
-                  0x004802                  _wizchip_spi_writebyte
-                  0x00480a                  _reg_wizchip_cris_cbfunc
-                  0x004832                  _reg_wizchip_cs_cbfunc
-                  0x00485a                  _reg_wizchip_bus_cbfunc
-                  0x00488e                  _reg_wizchip_spi_cbfunc
-                  0x0048c2                  _ctlwizchip
-                  0x004a04                  _ctlnetwork
-                  0x004a62                  _wizchip_sw_reset
-                  0x004ace                  _wizchip_init
-                  0x004b94                  _wizchip_clrinterrupt
-                  0x004bba                  _wizchip_getinterrupt
-                  0x004bf0                  _wizchip_setinterruptmask
-                  0x004c12                  _wizchip_getinterruptmask
-                  0x004c46                  _wizphy_getphylink
-                  0x004c68                  _wizphy_getphypmode
-                  0x004c8e                  _wizphy_reset
-                  0x004cba                  _wizphy_setphyconf
-                  0x004d14                  _wizphy_getphyconf
-                  0x004da6                  _wizphy_getphystat
-                  0x004dda                  _wizphy_setphypmode
-                  0x004e46                  _wizchip_setnetinfo
-                  0x004eaa                  _wizchip_getnetinfo
-                  0x004f0e                  _wizchip_setnetmode
-                  0x004f3c                  _wizchip_getnetmode
-                  0x004f48                  _wizchip_settimeout
-                  0x004f7a                  _wizchip_gettimeout
- .text            0x004faa        0x554 build/dsPIC33EP512MC502/production/w5500.o
-                  0x004faa                  _WIZCHIP_READ
-                  0x005030                  _WIZCHIP_WRITE
-                  0x0050b2                  _WIZCHIP_READ_BUF
-                  0x00515e                  _WIZCHIP_WRITE_BUF
-                  0x005210                  _getSn_TX_FSR
-                  0x005296                  _getSn_RX_RSR
-                  0x00531c                  _wiz_send_data
-                  0x0053d4                  _wiz_recv_data
-                  0x00548c                  _wiz_recv_ignore
+                  0x003f44                  _CommandPoll
+                  0x004396                  _wizchip_select
+                  0x00439e                  _wizchip_deselect
+                  0x0043a6                  _wizchip_write
+                  0x0043c2                  _wizchip_read
+                  0x0043d8                  _network_init
+                  0x0044c8                  _tcps
+                  0x0045e0                  _platform_init
+                  0x004660                  _InitSPI2
+                  0x004682                  _ConfigureOscillator
+                  0x0046d8                  __T1Interrupt
+                  0x004728                  _SetTmr5
+                  0x004748                  __T5Interrupt
+                  0x004782                  _my_ip_assign
+                  0x0047aa                  _my_ip_conflict
+                  0x0047b2                  _initDma1and2
+ .text            0x0047f8        0x7fc build/dsPIC33EP512MC502/production/wizchip_conf.o
+                  0x0047f8                  _wizchip_cris_enter
+                  0x0047fe                  _wizchip_cris_exit
+                  0x004804                  _wizchip_cs_select
+                  0x00480a                  _wizchip_cs_deselect
+                  0x004810                  _wizchip_bus_readbyte
+                  0x004828                  _wizchip_bus_writebyte
+                  0x004844                  _wizchip_spi_readbyte
+                  0x00484c                  _wizchip_spi_writebyte
+                  0x004854                  _reg_wizchip_cris_cbfunc
+                  0x00487c                  _reg_wizchip_cs_cbfunc
+                  0x0048a4                  _reg_wizchip_bus_cbfunc
+                  0x0048d8                  _reg_wizchip_spi_cbfunc
+                  0x00490c                  _ctlwizchip
+                  0x004a4e                  _ctlnetwork
+                  0x004aac                  _wizchip_sw_reset
+                  0x004b18                  _wizchip_init
+                  0x004bde                  _wizchip_clrinterrupt
+                  0x004c04                  _wizchip_getinterrupt
+                  0x004c3a                  _wizchip_setinterruptmask
+                  0x004c5c                  _wizchip_getinterruptmask
+                  0x004c90                  _wizphy_getphylink
+                  0x004cb2                  _wizphy_getphypmode
+                  0x004cd8                  _wizphy_reset
+                  0x004d04                  _wizphy_setphyconf
+                  0x004d5e                  _wizphy_getphyconf
+                  0x004df0                  _wizphy_getphystat
+                  0x004e24                  _wizphy_setphypmode
+                  0x004e90                  _wizchip_setnetinfo
+                  0x004ef4                  _wizchip_getnetinfo
+                  0x004f58                  _wizchip_setnetmode
+                  0x004f86                  _wizchip_getnetmode
+                  0x004f92                  _wizchip_settimeout
+                  0x004fc4                  _wizchip_gettimeout
+ .text            0x004ff4        0x58c build/dsPIC33EP512MC502/production/w5500.o
+                  0x004ff4                  _WIZCHIP_READ
+                  0x00507a                  _WIZCHIP_WRITE
+                  0x0050fc                  _WIZCHIP_READ_BUF
+                  0x0051a8                  _WIZCHIP_WRITE_BUF
+                  0x005278                  _getSn_TX_FSR
+                  0x0052fe                  _getSn_RX_RSR
+                  0x005384                  _wiz_send_data
+                  0x00543c                  _wiz_recv_data
+                  0x0054f4                  _wiz_recv_ignore
+                  0x005566                  __DMA1Interrupt
+                  0x00556e                  __DMA2Interrupt
 
-.dinit            0x0054fe        0x14a
- .dinit           0x0054fe        0x14a data_init
+.dinit            0x005580        0x14a
+ .dinit           0x005580        0x14a data_init
 
-.text             0x005648        0x12a
- .text            0x005648         0xf2 build/dsPIC33EP512MC502/production/user.o
-                  0x005648                  _SetAdc1
-                  0x0056c8                  _SetTmr3
-                  0x0056de                  _SetTmr1
-                  0x0056f4                  __AD1Interrupt
- .text            0x00573a         0x38 build/dsPIC33EP512MC502/production/delay.o
-                  0x00573a                  _Delay
-                  0x005756                  _Delay_Us
+.text             0x0056ca         0xe4
+ .text            0x0056ca         0xe4 build/dsPIC33EP512MC502/production/user.o
+                  0x0056ca                  _SetAdc1
+                  0x00574a                  _SetTmr3
+                  0x005760                  _SetTmr1
+                  0x005776                  __AD1Interrupt
 
-.shared.dinit     0x005772          0x2
- .shared.dinit    0x005772          0x2 shared_data_init
+.init.delay32     0x0057ae         0x1c
+ .init.delay32    0x0057ae         0x1c d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(delay32ep.eo)
+                  0x0057ae                  ___delay32
+
+.shared.dinit     0x0057ca          0x2
+ .shared.dinit    0x0057ca          0x2 shared_data_init

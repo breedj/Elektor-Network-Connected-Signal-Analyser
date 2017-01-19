@@ -45,10 +45,13 @@
 //#include <stdio.h>
 #include "w5500.h"
 #include <xc.h>
+#include <stdbool.h>
 #define _W5500_SPI_VDM_OP_          0x00
 #define _W5500_SPI_FDM_OP_LEN1_     0x01
 #define _W5500_SPI_FDM_OP_LEN2_     0x02
 #define _W5500_SPI_FDM_OP_LEN4_     0x03
+
+bool done = false;
 
 ////////////////////////////////////////////////////
 
@@ -143,8 +146,10 @@ void     WIZCHIP_READ_BUF (uint32_t AddrSel, uint8_t* pBuf, uint16_t len)
 
 void     WIZCHIP_WRITE_BUF(uint32_t AddrSel, uint8_t* pBuf, uint16_t len)
 {
-   uint16_t i = 0;
-   uint16_t j = 0;
+////   uint16_t i = 0;
+////   uint16_t j = 0;
+
+   uint8_t dummy;
    WIZCHIP_CRITICAL_ENTER();
    WIZCHIP.CS._select();
 
@@ -154,8 +159,40 @@ void     WIZCHIP_WRITE_BUF(uint32_t AddrSel, uint8_t* pBuf, uint16_t len)
       WIZCHIP.IF.SPI._write_byte((AddrSel & 0x00FF0000) >> 16);
       WIZCHIP.IF.SPI._write_byte((AddrSel & 0x0000FF00) >>  8);
       WIZCHIP.IF.SPI._write_byte((AddrSel & 0x000000FF) >>  0);
-      for(i = 0; i < len; i++,j)
-         WIZCHIP.IF.SPI._write_byte(pBuf[i]);
+//////      for(i = 0; i < len; i++,j)
+//////         WIZCHIP.IF.SPI._write_byte(pBuf[i]);
+
+        done = false;                       //using dma and spi for faster uP to W5500 transfers
+                                            //looping software takes longer
+                                            //could consider asm language hardware do loop later
+                                            //interrupts occur after block is transferred
+        SPI1STATbits.SPIEN=0;
+
+        DMA1CNT = len-1;
+        DMA1STAL = (unsigned int)pBuf;
+        //DMA1STBL = (unsigned int)pBuf;    //should never get to B because in one shot mode
+
+        IFS0bits.DMA1IF = 0;
+        IEC0bits.DMA1IE = 1;// Enable DMA interrupt
+        DMA1CONbits.CHEN = 1;
+
+        DMA2STAL = (unsigned int)&dummy;    //spi requires dummy read ater write to continue
+        //DMA2STBL = (unsigned int)&dummy;  //should never get to B because one shot
+        DMA2CNT = len-1;
+
+        IFS1bits.DMA2IF = 0;
+        IEC1bits.DMA2IE = 1;
+        DMA2CONbits.CHEN=1;
+
+        SPI1STATbits.SPIEN=1;
+
+        // Force First word after Enabling SPI
+        DMA1REQbits.FORCE=1;
+        while(DMA1REQbits.FORCE==1);
+
+        while(done == false);       //wait for DMA transfer to complete; happens in DMA2 interrupt
+
+        //printf("DMA1CNT = %d  DMACNT2 = %d  len = %d\r\n", DMA1CNT,DMA2CNT,len);
    #endif
 #endif
    WIZCHIP.CS._deselect();
@@ -235,4 +272,17 @@ void wiz_recv_ignore(uint8_t sn, uint16_t len)
    ptr += len;
    setSn_RX_RD(sn,ptr);
 }
+
+void __attribute__((__interrupt__,no_auto_psv)) _DMA1Interrupt(void)
+{
+   //done = true;
+  IFS0bits.DMA1IF = 0; // Clear the DMA1 Interrupt Flag}
+}
+
+void __attribute__((__interrupt__,no_auto_psv)) _DMA2Interrupt(void)
+{
+   done = true;
+  IFS1bits.DMA2IF = 0; // Clear the DMA1 Interrupt Flag}
+}
+
 
