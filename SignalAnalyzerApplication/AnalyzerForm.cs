@@ -1086,7 +1086,12 @@ namespace SignalAnalyzerApplication
                     lblFFTFrequency.Text = "Base frequency: ?";
                 }
                 _lastFftRenderTime = DateTime.Now;
-            }            
+            }
+            if (data != null)
+            {
+                lblAveragesCollected.Text = data.AveragesCollected.ToString();
+                lblAveragesCollected.ForeColor = data.AveragesCollected == (int)udFFTAverages.Value ? Color.Green : Color.Red;
+            }
         }
 
         /// <summary>
@@ -1292,13 +1297,18 @@ namespace SignalAnalyzerApplication
         {            
             chkEnableSignalGenerator.Checked = true;
             cmbGeneratorWaveform.SelectedIndex = 3;
-            udFFTAverages.Value = 25;
-            MessageBox.Show("White noise generator has been enabled and FFT set to 25 averages.");
+            udFFTAverages.Value = 500;
+            MessageBox.Show("White noise generator has been enabled and FFT set to 500 averages.");
         }
 
         private void chkFFTDrawMaxTrace_CheckedChanged(object sender, EventArgs e)
         {
             FFTData.ResetMaxTrace();
+        }
+
+        private void btnResetAvg_Click(object sender, EventArgs e)
+        {
+            _analyzer.ResetFftAverages();
         }
     }
     

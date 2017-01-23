@@ -93,6 +93,8 @@ namespace Elektor.SignalAnalyzer
             }
         }
 
+        public double AveragesCollected { get; set; }
+
         /// <summary>
         /// Clear max trace
         /// </summary>
@@ -100,5 +102,6 @@ namespace Elektor.SignalAnalyzer
         {
             _statistics.ResetMaxTrace();
         }
+    
     }
 }

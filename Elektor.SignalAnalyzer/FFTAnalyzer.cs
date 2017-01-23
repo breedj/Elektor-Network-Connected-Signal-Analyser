@@ -25,6 +25,7 @@ namespace Elektor.SignalAnalyzer
         private static int _fftAvgCnt = 1;               //Spectra averaging variables; inits to no averaging
         private static int _fftAvgWant = 1;               //Spectra averaging variables; inits to no averaging
         private static int _fftSize;
+        private bool _resetAverages = false;
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         #region Event Handlers
@@ -88,6 +89,12 @@ namespace Elektor.SignalAnalyzer
                 MemoryPlanCleanUp();
         }
 
+        public void ResetAverages()
+        {
+            lock (PropertyLock)
+                _resetAverages = true;
+        }
+
         /// <summary>
         /// Executes an FFT on another thread
         /// </summary>
@@ -125,8 +132,9 @@ namespace Elektor.SignalAnalyzer
 
                 lock (PropertyLock)
                 {
-                    if (_fftSize != args.Samples.Length || _fftAvgWant != args.WantedAverages)
+                    if (_fftSize != args.Samples.Length || _fftAvgWant != args.WantedAverages || _resetAverages)
                     {
+                        _resetAverages = false;
                         if (_fftSize > 0)
                             MemoryPlanCleanUp(); // Plan changed, clean up
                         _fftSize = args.Samples.Length;
@@ -171,7 +179,7 @@ namespace Elektor.SignalAnalyzer
                     j += 2;
                 }
 
-                if (_fftAvgCnt >= _fftAvgWant) // Wait until wanted amount collected.
+                //if (_fftAvgCnt >= _fftAvgWant) // Wait until wanted amount collected.
                 {
                     double[] fft = new double[_fftSize/2];
                     double[] rms = new double[_fftSize/2];
@@ -208,8 +216,9 @@ namespace Elektor.SignalAnalyzer
 
                     FFTData fftData = new FFTData(fft, rms, args.SamplesPerSecond);
                     fftData.Statistics.Calculate(fft, rms);
+                    fftData.AveragesCollected = _fftAvgCnt <= _fftAvgWant ? _fftAvgCnt : _fftAvgWant;
                     e.Result = fftData;
-                }
+                }                
                 _fftAvgCnt++; //increment pointer to ring buffer for spectra                        
             }
             catch (Exception) {}            

@@ -142,6 +142,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.lblDataRate = new System.Windows.Forms.Label();
             this.chkFFTDrawMaxTrace = new System.Windows.Forms.CheckBox();
+            this.lblAveragesCollected = new System.Windows.Forms.Label();
+            this.lblAverages = new System.Windows.Forms.Label();
+            this.btnResetAvg = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.spectrum)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -1010,7 +1013,7 @@
             // 
             this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(1181, 610);
+            this.label25.Location = new System.Drawing.Point(1187, 610);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(52, 13);
             this.label25.TabIndex = 87;
@@ -1021,7 +1024,7 @@
             this.udFFTAverages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.udFFTAverages.Location = new System.Drawing.Point(1142, 606);
             this.udFFTAverages.Maximum = new decimal(new int[] {
-            50,
+            1000,
             0,
             0,
             0});
@@ -1031,7 +1034,7 @@
             0,
             0});
             this.udFFTAverages.Name = "udFFTAverages";
-            this.udFFTAverages.Size = new System.Drawing.Size(39, 20);
+            this.udFFTAverages.Size = new System.Drawing.Size(46, 20);
             this.udFFTAverages.TabIndex = 86;
             this.udFFTAverages.Value = new decimal(new int[] {
             1,
@@ -1447,6 +1450,41 @@
             this.chkFFTDrawMaxTrace.UseVisualStyleBackColor = false;
             this.chkFFTDrawMaxTrace.CheckedChanged += new System.EventHandler(this.chkFFTDrawMaxTrace_CheckedChanged);
             // 
+            // lblAveragesCollected
+            // 
+            this.lblAveragesCollected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAveragesCollected.AutoSize = true;
+            this.lblAveragesCollected.BackColor = System.Drawing.Color.White;
+            this.lblAveragesCollected.Location = new System.Drawing.Point(907, 717);
+            this.lblAveragesCollected.Name = "lblAveragesCollected";
+            this.lblAveragesCollected.Size = new System.Drawing.Size(13, 13);
+            this.lblAveragesCollected.TabIndex = 113;
+            this.lblAveragesCollected.Text = "?";
+            // 
+            // lblAverages
+            // 
+            this.lblAverages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAverages.AutoSize = true;
+            this.lblAverages.BackColor = System.Drawing.Color.White;
+            this.lblAverages.Location = new System.Drawing.Point(856, 717);
+            this.lblAverages.Name = "lblAverages";
+            this.lblAverages.Size = new System.Drawing.Size(55, 13);
+            this.lblAverages.TabIndex = 112;
+            this.lblAverages.Text = "Averages:";
+            // 
+            // btnResetAvg
+            // 
+            this.btnResetAvg.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnResetAvg.Location = new System.Drawing.Point(943, 713);
+            this.btnResetAvg.Name = "btnResetAvg";
+            this.btnResetAvg.Size = new System.Drawing.Size(101, 21);
+            this.btnResetAvg.TabIndex = 114;
+            this.btnResetAvg.Text = "Reset averages";
+            this.btnResetAvg.UseVisualStyleBackColor = false;
+            this.btnResetAvg.Click += new System.EventHandler(this.btnResetAvg_Click);
+            // 
             // SygnalAnalyzerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1454,6 +1492,9 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.DarkKhaki;
             this.ClientSize = new System.Drawing.Size(1247, 749);
+            this.Controls.Add(this.btnResetAvg);
+            this.Controls.Add(this.lblAveragesCollected);
+            this.Controls.Add(this.lblAverages);
             this.Controls.Add(this.chkFFTDrawMaxTrace);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.lblDataRate);
@@ -1626,6 +1667,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblDataRate;
         private System.Windows.Forms.CheckBox chkFFTDrawMaxTrace;
+        private System.Windows.Forms.Label lblAveragesCollected;
+        private System.Windows.Forms.Label lblAverages;
+        private System.Windows.Forms.Button btnResetAvg;
     }
 }
 

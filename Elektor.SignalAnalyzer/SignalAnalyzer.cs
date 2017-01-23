@@ -83,7 +83,10 @@ namespace Elektor.SignalAnalyzer
             _fftAnalyzer.Cancel();           
         }
 
-
+        public void ResetFftAverages()
+        {
+            _fftAnalyzer.ResetAverages();
+        }
 
         /// <summary>
         /// Client connection
