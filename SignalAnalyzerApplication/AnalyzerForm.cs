@@ -1051,8 +1051,18 @@ namespace SignalAnalyzerApplication
                     {
                         spectrum.Series["Series1"].Points.AddXY(xPoints[i], yPoints[i]);
                         if (xPointsMax != null && yPointsMax != null)
-                            spectrum.Series["Series2"].Points.AddXY(xPointsMax[i], yPointsMax[i]);
+                            spectrum.Series["Series2"].Points.AddXY(xPointsMax[i], yPointsMax[i]);                        
                     }
+
+                    for (int i = 0; i < 1200; i++)
+                    {
+                        Debug.WriteLine(xPoints[i].ToString());                        
+                    }
+                    for (int i = 0; i < 1200; i++)
+                    {
+                        Debug.WriteLine((120.0 + yPoints[i]).ToString());
+                    }
+
                 }
                 spectrum.Series.ResumeUpdates();
                 spectrum.Series.Invalidate();

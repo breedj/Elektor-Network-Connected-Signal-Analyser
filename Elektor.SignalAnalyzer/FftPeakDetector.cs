@@ -32,8 +32,7 @@ namespace Elektor.SignalAnalyzer
 
             PeakDetectionData result = new PeakDetectionData
             {
-                PeakAmps = new double[npeaks.Value],
-                PeakLocs = new double[npeaks.Value],
+                PeakAmps = new double[npeaks.Value],PeakLocs = new double[npeaks.Value],
                 PeakWidths = new double[npeaks.Value]
             };
 
@@ -202,3 +201,88 @@ resid = data;
         public double[] hc { get; set; }        
     }
 }
+
+
+
+
+
+
+
+//public void GetPeaks(int lag, double treshHold, double influence)
+//{
+//    int amountSamples = FreqDomain.Length;
+//    int[] signals = new int[amountSamples];
+//    double[] filteredY = new double[amountSamples];
+//    double[] avgFilter = new double[amountSamples];
+//    double[] stdFilter = new double[amountSamples];
+
+//    try
+//    {
+//        for (int i = 0; i < lag; i++)
+//            filteredY[i] = FreqDomain[i];
+//        avgFilter[lag] = FreqDomain.Take(lag).Average();
+//        stdFilter[lag] = FreqDomain.Take(lag).StdDev();
+
+//        for (int i = lag; i < amountSamples; i++)
+//        {
+//            if (Math.Abs(FreqDomain[i] - avgFilter[i - 1]) > treshHold * stdFilter[i - 1])
+//            {
+//                if (FreqDomain[i] > avgFilter[i - 1])
+//                    signals[i] = 1;
+
+//                filteredY[i] = influence * FreqDomain[i] + (1 - influence) * filteredY[i - 1];
+
+//            }
+//            else
+//            {
+//                signals[i] = 0;
+//                filteredY[i] = FreqDomain[i];
+//            }
+//            avgFilter[i] = filteredY.Skip(i - lag).Take(lag).Average();
+//            stdFilter[i] = filteredY.Skip(i - lag).Take(lag).StdDev(avgFilter[i]);
+//        }
+//    }
+//    catch (Exception ex)
+//    {
+
+//    }
+
+//    Peaks = signals;
+//}
+
+
+
+//public static class ListExtenstions
+//{
+
+//    public static double StdDev(this IEnumerable<double> values)
+//    {
+//        double ret = 0;
+//        if (values.Count() > 0)
+//        {
+//            //Compute the Average
+//            double avg = values.Average();
+
+//            //Perform the Sum of (value-avg)^2
+//            double sum = values.Sum(d => Math.Pow(d - avg, 2));
+
+//            //Put it all together
+//            ret = Math.Sqrt((sum) / values.Count() - 1);
+//        }
+//        return ret;
+//    }
+
+//    public static double StdDev(this IEnumerable<double> values, double avg)
+//    {
+//        double ret = 0;
+//        if (values.Count() > 0)
+//        {
+//            //Perform the Sum of (value-avg)^2
+//            double sum = values.Sum(d => Math.Pow(d - avg, 2));
+
+//            //Put it all together
+//            ret = Math.Sqrt((sum) / values.Count() - 1);
+//        }
+//        return ret;
+//    }
+//}

@@ -207,7 +207,7 @@ section                    address      alignment gaps    total length  (dec)
 .data                       0x1f4a                   0             0x2  (2)
 .bss                        0x1f4c                   0             0x2  (2)
 .data                       0x1f4e                   0             0x2  (2)
-_03E6F9C0587d37ba           0x2bf0                   0          0xa410  (42000)
+_03E3F9C058837336           0x2bf0                   0          0xa410  (42000)
 
                  Total data memory used (bytes):         0xb360  (45920) 93%
 
@@ -2587,9 +2587,9 @@ __c30_signature
  .data              0x1f4e          0x2 d:/program files (x86)/microchip/xc16/v1.26/bin/bin/../../lib\libpic30-elf.a(c30_uartep.eo)
                     0x1f4e                  ___C30_UART
 
-_03E6F9C0587d37ba
+_03E3F9C058837336
                     0x2bf0       0xa410
- _03E6F9C0587d37ba
+ _03E3F9C058837336
                     0x2bf0       0xa410 build/dsPIC33EP512MC502/production/main.o
                     0x2bf0                  _MainBuffer
 
